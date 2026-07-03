@@ -12,6 +12,8 @@ export const BROKER = {
   slogan: "Avec Laroche, c'est sur la coche !",
   // Initiales affichées si aucune photo n'est fournie dans /public.
   initials: "PL",
-  // Chemin de la photo (optionnel). Laisser vide tant qu'il n'y a pas d'asset.
-  photo: "",
+  // Photo du courtier (dans /public). Vide = fallback sur les initiales.
+  photo: "/philippe.webp",
+  // Cadrage object-position de la photo dans l'avatar rond (focus visage).
+  photoPosition: "50% 22%",
 } as const;

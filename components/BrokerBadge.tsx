@@ -37,6 +37,7 @@ export default function BrokerBadge() {
               fill
               sizes="(max-width: 640px) 64px, 80px"
               className="object-cover"
+              style={{ objectPosition: BROKER.photoPosition }}
               priority
             />
           ) : (

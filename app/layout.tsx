@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   description:
     "Découvre le meilleur plan pour vendre ta propriété en moins de 2 minutes. Un logiciel intelligent analyse ta propriété, ton marché et ton objectif pour te proposer la meilleure stratégie de vente à Montréal.",
   metadataBase: new URL("https://philippelarocheimmobilier.com"),
+  icons: { icon: "/pl-mark.png", apple: "/pl-mark.png" },
   openGraph: {
     title: "Découvre le meilleur plan pour vendre ta propriété",
     description: "Plan de vente personnalisé — Philippe Laroche, courtier immobilier à Montréal (RE/MAX Cité).",

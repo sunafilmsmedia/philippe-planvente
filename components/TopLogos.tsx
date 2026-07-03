@@ -35,11 +35,11 @@ export default function TopLogos() {
       >
         <Image
           src="/logo-remax.png"
-          alt="RE/MAX"
-          width={957}
-          height={259}
+          alt="RE/MAX Cité"
+          width={1080}
+          height={690}
           priority
-          className="h-7 sm:h-9 w-auto"
+          className="h-10 sm:h-12 w-auto"
         />
       </motion.div>
     </>
