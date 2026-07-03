@@ -1,15 +1,37 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { useEffect } from "react";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { REGION_CENTER } from "@/lib/regions";
 
-const MapContainer = dynamic(() => import("react-leaflet").then((m) => m.MapContainer), { ssr: false });
-const TileLayer = dynamic(() => import("react-leaflet").then((m) => m.TileLayer), { ssr: false });
+// Force Leaflet à recalculer sa taille au montage → garantit le chargement
+// des tuiles même quand le conteneur est initialisé à 0px.
+function InvalidateOnMount() {
+  const map = useMap();
+  useEffect(() => {
+    const fix = () => map.invalidateSize();
+    fix();
+    const t1 = setTimeout(fix, 200);
+    const t2 = setTimeout(fix, 800);
+    window.addEventListener("resize", fix);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("resize", fix);
+    };
+  }, [map]);
+  return null;
+}
 
+// Fond : carte de Montréal en ton-sur-ton beige (même couleur que le fond).
 export default function HeroBackground() {
   return (
-    <div className="absolute inset-0 -z-10 overflow-hidden">
-      <div className="map-mono map-no-interaction absolute inset-0">
+    <div className="absolute inset-0 -z-10 overflow-hidden" style={{ background: "#ece4d8" }}>
+      {/* Carte, désaturée et éclaircie */}
+      <div
+        className="map-no-interaction absolute inset-0"
+        style={{ filter: "grayscale(1) brightness(1.1) contrast(0.82)" }}
+      >
         <MapContainer
           center={REGION_CENTER}
           zoom={11}
@@ -28,22 +50,22 @@ export default function HeroBackground() {
             attribution='&copy; OpenStreetMap, &copy; CARTO'
             subdomains={["a", "b", "c", "d"]}
           />
+          <InvalidateOnMount />
         </MapContainer>
       </div>
 
-      {/* Voile beige dégradé pour lisibilité (thème clair) */}
+      {/* Teinte beige (multiply) — colore la carte dans le ton du fond */}
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 28%, rgba(236, 228, 216, 0.35) 0%, rgba(236, 228, 216, 0.8) 55%, rgba(233, 224, 210, 0.96) 100%)",
-        }}
+        style={{ background: "#e6dcc9", mixBlendMode: "multiply", opacity: 0.55 }}
       />
+
+      {/* Voile radial pour la lisibilité du texte central */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%, rgba(236,228,216,0.6) 100%)",
+            "radial-gradient(ellipse at 50% 32%, rgba(236,228,216,0) 0%, rgba(236,228,216,0.35) 55%, rgba(236,228,216,0.82) 100%)",
         }}
       />
     </div>

@@ -23,7 +23,7 @@ export default function Hero({ onStart }: HeroProps) {
 
         {/* Titre H1 */}
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
-          Découvre le meilleur plan pour vendre ta propriété en moins de 2 minutes
+          Découvre le meilleur plan pour vendre ta propriété à Montréal
         </h1>
 
         {/* Sous-titre */}
@@ -57,7 +57,7 @@ export default function Hero({ onStart }: HeroProps) {
               active:translate-y-0
             "
           >
-            <span>Créer mon plan de vente</span>
+            <span>Créer mon plan en 2 minutes</span>
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

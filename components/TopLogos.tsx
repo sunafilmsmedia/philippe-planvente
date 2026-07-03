@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { BROKER } from "@/lib/broker";
 
 export default function TopLogos() {
   return (
@@ -15,13 +14,23 @@ export default function TopLogos() {
         className="fixed top-4 left-4 sm:top-6 sm:left-6 z-30 pointer-events-none"
         aria-hidden
       >
-        <div className="leading-none">
-          <p className="font-serif text-lg sm:text-xl text-[var(--color-brand-100)] tracking-tight">
-            {BROKER.name}
-          </p>
-          <p className="text-[9px] sm:text-[10px] uppercase tracking-[0.28em] text-[var(--color-brand-300)] mt-0.5">
-            {BROKER.title}
-          </p>
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          <Image
+            src="/pl-mark.png"
+            alt="Philippe Laroche"
+            width={720}
+            height={720}
+            priority
+            className="h-9 sm:h-11 w-auto"
+          />
+          <div className="leading-none">
+            <p className="font-sans font-extrabold uppercase tracking-tight text-[var(--color-ink)] text-sm sm:text-base">
+              Avec Laroche
+            </p>
+            <p className="font-serif italic text-[10px] sm:text-xs text-[var(--color-muted)] mt-0.5">
+              c&apos;est sur la coche
+            </p>
+          </div>
         </div>
       </motion.div>
 
