@@ -23,7 +23,8 @@ export default function Hero({ onStart }: HeroProps) {
 
         {/* Titre H1 */}
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
-          Découvre le meilleur plan pour vendre ta propriété à Montréal
+          Découvre le meilleur plan pour vendre ta propriété à{" "}
+          <span className="text-[var(--color-brand-500)]">Montréal</span>
         </h1>
 
         {/* Sous-titre */}
