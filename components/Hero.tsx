@@ -25,6 +25,28 @@ export default function Hero({ onStart }: HeroProps) {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-3xl text-center"
       >
+        {/* Secteurs desservis — en haut */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+          className="mb-8 sm:mb-10"
+        >
+          <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--color-muted-2)] mb-3">
+            Secteurs desservis
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
+            {SECTORS.map((s) => (
+              <span
+                key={s}
+                className="px-3 py-1.5 rounded-full text-xs font-medium text-[var(--color-brand-200)] bg-white/70 border border-black/5 shadow-[0_2px_8px_-4px_rgba(74,22,17,0.18)]"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+
         {/* Chip */}
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs sm:text-sm text-[var(--color-brand-200)] mb-7 sm:mb-9">
           <span className="relative inline-flex w-2 h-2 rounded-full bg-[var(--color-gold)] text-[var(--color-gold)] pulse-dot" />
@@ -36,12 +58,6 @@ export default function Hero({ onStart }: HeroProps) {
           Découvre le meilleur plan pour vendre ta propriété en{" "}
           <span className="text-[var(--color-brand-500)]">2 min</span>
         </h1>
-
-        {/* Sous-titre */}
-        <p className="mt-6 text-base sm:text-lg text-[var(--color-muted)] max-w-xl mx-auto leading-relaxed text-balance">
-          Réponds à quelques questions et notre logiciel intelligent analyse ta propriété,
-          ton marché et ton objectif pour te proposer la meilleure stratégie de vente.
-        </p>
 
         {/* Divider doré */}
         <div className="mt-8 sm:mt-10 mx-auto w-12 h-px bg-gradient-to-r from-transparent via-[var(--color-gold)] to-transparent" />
@@ -76,27 +92,16 @@ export default function Hero({ onStart }: HeroProps) {
           <p className="text-xs text-[var(--color-muted-2)]">Moins de 2 minutes — gratuit et confidentiel</p>
         </motion.div>
 
-        {/* Secteurs desservis */}
-        <motion.div
+        {/* Sous-titre — à la fin */}
+        <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.7 }}
-          className="mt-12 sm:mt-14"
+          className="mt-12 sm:mt-14 text-base sm:text-lg text-[var(--color-muted)] max-w-xl mx-auto leading-relaxed text-balance"
         >
-          <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--color-muted-2)] mb-3">
-            Secteurs desservis
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
-            {SECTORS.map((s) => (
-              <span
-                key={s}
-                className="px-3 py-1.5 rounded-full text-xs font-medium text-[var(--color-brand-200)] bg-white/70 border border-black/5 shadow-[0_2px_8px_-4px_rgba(74,22,17,0.18)]"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </motion.div>
+          Réponds à quelques questions et notre logiciel intelligent analyse ta propriété,
+          ton marché et ton objectif pour te proposer la meilleure stratégie de vente.
+        </motion.p>
       </motion.div>
 
       {/* Scroll hint */}
