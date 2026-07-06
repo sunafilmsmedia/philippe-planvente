@@ -6,28 +6,27 @@ export interface RegionWithLabel extends Region {
   labelDir: "top" | "bottom" | "left" | "right";
 }
 
-// Arrondissements couverts par Philippe Laroche (île de Montréal).
+// Secteurs couverts par Philippe Laroche (Est de Montréal + couronne nord-est).
 export const REGIONS: RegionWithLabel[] = [
-  { id: "ville-marie",    name: "Ville-Marie",           lat: 45.5088, lng: -73.5617, labelDir: "right" },
-  { id: "plateau",        name: "Plateau-Mont-Royal",    lat: 45.5232, lng: -73.5800, labelDir: "right" },
-  { id: "rosemont",       name: "Rosemont",              lat: 45.5470, lng: -73.5900, labelDir: "right" },
-  { id: "villeray",       name: "Villeray",              lat: 45.5560, lng: -73.6150, labelDir: "top" },
-  { id: "ahuntsic",       name: "Ahuntsic-Cartierville", lat: 45.5570, lng: -73.6650, labelDir: "top" },
-  { id: "saint-laurent",  name: "Saint-Laurent",         lat: 45.5100, lng: -73.7150, labelDir: "left" },
-  { id: "cdn-ndg",        name: "Côte-des-Neiges",       lat: 45.4870, lng: -73.6300, labelDir: "left" },
-  { id: "sud-ouest",      name: "Le Sud-Ouest",          lat: 45.4720, lng: -73.5830, labelDir: "bottom" },
-  { id: "verdun",         name: "Verdun",                lat: 45.4560, lng: -73.5700, labelDir: "bottom" },
-  { id: "lasalle",        name: "LaSalle",               lat: 45.4310, lng: -73.6280, labelDir: "bottom" },
-  { id: "mhm",            name: "Hochelaga-Maisonneuve", lat: 45.5620, lng: -73.5400, labelDir: "right" },
-  { id: "montreal-nord",  name: "Montréal-Nord",         lat: 45.5950, lng: -73.6280, labelDir: "top" },
-  { id: "rdp-pat",        name: "Rivière-des-Prairies",  lat: 45.6350, lng: -73.5050, labelDir: "top" },
+  { id: "hochelaga",      name: "Hochelaga-Maisonneuve", lat: 45.5560, lng: -73.5400, labelDir: "left" },
+  { id: "anjou",          name: "Anjou",                 lat: 45.6110, lng: -73.5570, labelDir: "left" },
+  { id: "saint-leonard",  name: "Saint-Léonard",         lat: 45.5880, lng: -73.6000, labelDir: "left" },
+  { id: "montreal-nord",  name: "Montréal-Nord",         lat: 45.5960, lng: -73.6280, labelDir: "left" },
+  { id: "rdp",            name: "Rivière-des-Prairies",  lat: 45.6480, lng: -73.5450, labelDir: "top" },
+  { id: "montreal-est",   name: "Montréal-Est",          lat: 45.6300, lng: -73.5080, labelDir: "bottom" },
+  { id: "pat",            name: "Pointe-aux-Trembles",   lat: 45.6650, lng: -73.4900, labelDir: "right" },
+  { id: "charlemagne",    name: "Charlemagne",           lat: 45.7180, lng: -73.4820, labelDir: "right" },
+  { id: "repentigny",     name: "Repentigny",            lat: 45.7420, lng: -73.4500, labelDir: "right" },
+  { id: "lachenaie",      name: "Lachenaie",             lat: 45.7150, lng: -73.5150, labelDir: "top" },
+  { id: "terrebonne",     name: "Terrebonne",            lat: 45.7000, lng: -73.6460, labelDir: "top" },
+  { id: "mascouche",      name: "Mascouche",             lat: 45.7470, lng: -73.6030, labelDir: "top" },
 ];
 
 // Centre approximatif pour la carte de fond (décorative).
-export const REGION_CENTER: [number, number] = [45.53, -73.62];
+export const REGION_CENTER: [number, number] = [45.655, -73.545];
 
 // Bounds englobant tous les secteurs avec padding pour la carte interactive.
 export const REGION_BOUNDS: [[number, number], [number, number]] = [
-  [45.42, -73.78], // sud-ouest (englobe LaSalle / Saint-Laurent)
-  [45.66, -73.47], // nord-est (englobe RDP–PAT et Montréal-Nord)
+  [45.54, -73.68], // sud-ouest (englobe Hochelaga / Terrebonne)
+  [45.77, -73.41], // nord-est (englobe Mascouche / Repentigny)
 ];

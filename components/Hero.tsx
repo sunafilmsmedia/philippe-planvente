@@ -6,6 +6,16 @@ interface HeroProps {
   onStart: () => void;
 }
 
+// Secteurs desservis (Est de Montréal + couronne nord-est)
+const SECTORS = [
+  "Montréal-Est",
+  "Pointe-aux-Trembles",
+  "Repentigny",
+  "Terrebonne",
+  "Rivière-des-Prairies",
+  "Anjou",
+];
+
 export default function Hero({ onStart }: HeroProps) {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-start px-5 sm:px-8 pt-20 sm:pt-28 pb-32">
@@ -23,8 +33,8 @@ export default function Hero({ onStart }: HeroProps) {
 
         {/* Titre H1 */}
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
-          Découvre le meilleur plan pour vendre ta propriété à{" "}
-          <span className="text-[var(--color-brand-500)]">Montréal</span>
+          Découvre le meilleur plan pour vendre ta propriété en{" "}
+          <span className="text-[var(--color-brand-500)]">2 min</span>
         </h1>
 
         {/* Sous-titre */}
@@ -64,6 +74,28 @@ export default function Hero({ onStart }: HeroProps) {
             </svg>
           </button>
           <p className="text-xs text-[var(--color-muted-2)]">Moins de 2 minutes — gratuit et confidentiel</p>
+        </motion.div>
+
+        {/* Secteurs desservis */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.8, duration: 0.7 }}
+          className="mt-12 sm:mt-14"
+        >
+          <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--color-muted-2)] mb-3">
+            Secteurs desservis
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
+            {SECTORS.map((s) => (
+              <span
+                key={s}
+                className="px-3 py-1.5 rounded-full text-xs font-medium text-[var(--color-brand-200)] bg-white/70 border border-black/5 shadow-[0_2px_8px_-4px_rgba(74,22,17,0.18)]"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
         </motion.div>
       </motion.div>
 
