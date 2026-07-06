@@ -32,7 +32,7 @@ export default function HeroBackground() {
       {/* Carte désaturée et chaude — plus présente qu'avant */}
       <div
         className="map-no-interaction absolute inset-0"
-        style={{ filter: "grayscale(0.75) sepia(0.35) brightness(1.02) contrast(1.04)" }}
+        style={{ filter: "grayscale(0.7) sepia(0.3) brightness(1.0) contrast(1.14)" }}
       >
         <MapContainer
           center={REGION_CENTER}
@@ -71,18 +71,18 @@ export default function HeroBackground() {
         </MapContainer>
       </div>
 
-      {/* Teinte beige (multiply) — garde tout dans le ton du fond, léger */}
+      {/* Teinte beige (multiply) — garde tout dans le ton du fond, très léger */}
       <div
         className="absolute inset-0"
-        style={{ background: "#e6dcc9", mixBlendMode: "multiply", opacity: 0.28 }}
+        style={{ background: "#e6dcc9", mixBlendMode: "multiply", opacity: 0.15 }}
       />
 
-      {/* Voile radial léger pour la lisibilité du texte central */}
+      {/* Voile radial léger, juste derrière le texte central */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 34%, rgba(236,228,216,0.1) 0%, rgba(236,228,216,0.4) 55%, rgba(236,228,216,0.7) 100%)",
+            "radial-gradient(ellipse at 50% 34%, rgba(236,228,216,0.05) 0%, rgba(236,228,216,0.28) 55%, rgba(236,228,216,0.55) 100%)",
         }}
       />
     </div>
