@@ -16,6 +16,37 @@ const SECTORS = [
   "Anjou",
 ];
 
+// Guide visuel du processus : on répond → l'IA analyse → on obtient un plan
+const PLAN_STEPS = [
+  {
+    label: "Réponds",
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7">
+        <path d="M8 4.5h8M8 10h8M8 15.5h8" strokeLinecap="round" />
+        <path d="M3.5 4l1 1 1.8-2.2M3.5 9.5l1 1 1.8-2.2M3.5 15l1 1 1.8-2.2" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    label: "Analyse IA",
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10 1.5l1.7 4.8L16.5 8l-4.8 1.7L10 14.5 8.3 9.7 3.5 8l4.8-1.7L10 1.5z" />
+        <path d="M15.8 12.4l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6.6-1.7z" />
+      </svg>
+    ),
+  },
+  {
+    label: "Ton plan",
+    icon: (
+      <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6">
+        <path d="M6 2.5h5L15 6.5v11H6z" strokeLinejoin="round" />
+        <path d="M11 2.5V6.5h4M8.2 10h4.6M8.2 13h4.6" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+];
+
 export default function Hero({ onStart }: HeroProps) {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-start px-5 sm:px-8 pt-20 sm:pt-28 pb-32">
@@ -47,11 +78,46 @@ export default function Hero({ onStart }: HeroProps) {
           </div>
         </motion.div>
 
-        {/* Chip */}
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card text-xs sm:text-sm text-[var(--color-brand-200)] mb-7 sm:mb-9">
-          <span className="relative inline-flex w-2 h-2 rounded-full bg-[var(--color-gold)] text-[var(--color-gold)] pulse-dot" />
-          <span className="font-medium tracking-wide ai-shimmer">Propulsé par l&apos;IA</span>
-        </div>
+        {/* Guide visuel — comment on génère ton plan */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.7 }}
+          className="mb-7 sm:mb-9 flex items-center justify-center gap-2 sm:gap-3"
+        >
+          {PLAN_STEPS.map((s, i) => {
+            const isLast = i === PLAN_STEPS.length - 1;
+            return (
+              <div key={s.label} className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1.5 sm:gap-2">
+                  <span
+                    className={`flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full glass-card ${
+                      isLast ? "text-[var(--color-brand-500)]" : "text-[var(--color-brand-400)]"
+                    }`}
+                  >
+                    {s.icon}
+                  </span>
+                  <span
+                    className={`text-xs sm:text-sm font-medium ${
+                      i === 1
+                        ? "ai-shimmer"
+                        : isLast
+                        ? "text-[var(--color-brand-500)]"
+                        : "text-[var(--color-brand-200)]"
+                    }`}
+                  >
+                    {s.label}
+                  </span>
+                </div>
+                {!isLast && (
+                  <svg className="w-3.5 h-3.5 shrink-0 text-[var(--color-muted-2)]" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M7 4l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </div>
+            );
+          })}
+        </motion.div>
 
         {/* Titre H1 */}
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
