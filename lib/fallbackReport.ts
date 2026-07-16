@@ -5,6 +5,7 @@ import type {
   Report,
   ReportStep,
   SalePreference,
+  SellingMotivation,
   ScoringResult,
   Verdict,
 } from "./types";
@@ -18,11 +19,11 @@ const VERDICT_HEADLINE: Record<Verdict, string> = {
 
 const VERDICT_SUMMARY: Record<Verdict, string> = {
   offensif:
-    "Selon tes réponses, tu pourrais passer en mode vente avec une stratégie claire. Le plan recommandé est offensif : préparation rapide, mise en marché forte, angle de rareté et lancement structuré.",
+    "Selon tes réponses, tu pourrais passer en mode vente avec une stratégie claire. Voici ton plan personnalisé, bâti à partir des conseils de Philippe selon ta situation.",
   strategique:
-    "Tu sembles avoir une vraie opportunité, mais ton résultat dépendra beaucoup de la préparation, du prix, du positionnement et du timing. On recommande un plan stratégique avant de mettre la propriété sur le marché.",
+    "Tu as une vraie opportunité, mais ton résultat dépendra de la préparation, du prix et du timing. Voici le plan stratégique que Philippe recommande selon tes réponses.",
   preparation:
-    "Selon tes réponses, il serait plus intelligent de préparer la propriété ou de clarifier ta situation avant de vendre. On recommande un plan de préparation pour éviter de vendre trop vite ou en dessous de ton potentiel.",
+    "Il serait plus intelligent de bien préparer la propriété ou de clarifier ta situation avant de vendre. Voici le plan de préparation recommandé par Philippe selon tes réponses.",
 };
 
 const PROPERTY_LABEL: Record<PropertyType, string> = {
@@ -59,102 +60,157 @@ const SALE_PREF_LABEL: Record<SalePreference, string> = {
   compare_options: "Comparer les options",
 };
 
-// Étape 1 — Préparer la propriété (selon l'état déclaré)
+// Étape 1 — Sécuriser ta prochaine étape (selon la MOTIVATION de vente)
+function motivationStep(m: SellingMotivation | undefined): ReportStep {
+  switch (m) {
+    case "upsize":
+      return {
+        title: "Étape 1 — Sécuriser ta prochaine acquisition",
+        description:
+          "Avant de vendre, on valide ta capacité financière (pré-approbation) pour que tu puisses acheter plus grand au bon moment — idéalement acheter avant ou en parallèle de ta vente, pour éviter le stress de la transition.",
+      };
+    case "relocation":
+      return {
+        title: "Étape 1 — Préparer ton changement de région",
+        description:
+          "On cible ta nouvelle région dès maintenant : emplacement visé, quartiers, services essentiels (épiceries, écoles, transport). Faire ces recherches en amont te permet de vendre et de déménager sans précipitation.",
+      };
+    case "reduce_payments":
+      return {
+        title: "Étape 1 — Viser le meilleur prix pour alléger ton budget",
+        description:
+          "Comme l'objectif est d'alléger tes paiements, on s'assure d'utiliser la meilleure méthode et la meilleure mise en marché pour aller chercher le prix le plus élevé possible — chaque dollar compte pour ta prochaine étape.",
+      };
+    case "separation":
+      return {
+        title: "Étape 1 — Faciliter les décisions",
+        description:
+          "Dans un contexte de séparation, on s'assure d'abord que les parties gardent une bonne entente : ça rend chaque décision (prix, délais, offres) plus fluide et protège la valeur de ta vente.",
+      };
+    default:
+      return {
+        title: "Étape 1 — Clarifier ta situation",
+        description:
+          "On prend le temps de bien comprendre ta situation pour bâtir un plan aligné sur ton objectif réel avant d'aller plus loin.",
+      };
+  }
+}
+
+// Étape 2 — Préparer la propriété (selon l'ÉTAT déclaré)
 const PREP_STEP: Record<PropertyCondition, ReportStep> = {
   ready: {
-    title: "Étape 1 — Préparer la propriété",
+    title: "Étape 2 — Préparer la propriété",
     description:
-      "Ta propriété est déjà prête. On valide les derniers détails (dépersonnalisation, éclairage, petits accrocs) pour la présenter à son plein potentiel dès le lancement.",
+      "Ta propriété est déjà prête — c'est parfait. On valide les derniers détails (dépersonnalisation, éclairage, petites retouches) pour la présenter à son plein potentiel dès le lancement.",
   },
   minor_reno: {
-    title: "Étape 1 — Préparer la propriété",
+    title: "Étape 2 — Préparer la propriété",
     description:
-      "Quelques rénovations mineures à fort levier (peinture, luminaires, retouches) avant la mise en marché. On priorise ce qui rapporte le plus par dollar investi.",
+      "On cible les rénovations à fort levier. Rénover avant de vendre est une bonne idée — mais s'il y en a trop, il est souvent plus rentable de vendre tel quel au meilleur prix possible. Pour les photos, on fait du staging virtuel; au besoin, Philippe te réfère ses compagnies de confiance avant une visite.",
   },
   staging: {
-    title: "Étape 1 — Préparer la propriété",
+    title: "Étape 2 — Préparer la propriété",
     description:
-      "Un home staging ciblé va transformer la perception des acheteurs : désencombrement, mise en valeur des espaces et ambiance chaleureuse pour les photos.",
+      "On mise sur le home staging pour transformer la perception des acheteurs : staging virtuel pour des photos qui accrochent, puis mise en valeur avec les compagnies partenaires de Philippe avant les visites.",
   },
   major_work: {
-    title: "Étape 1 — Préparer la propriété",
+    title: "Étape 2 — Préparer la propriété",
     description:
-      "Avant de vendre, on établit ce qui doit être fait vs ce qui peut être vendu « à rénover ». Objectif : ne pas surinvestir tout en évitant de laisser de l'argent sur la table.",
+      "Il y a des travaux importants : tu as besoin d'un regard professionnel. Envoie tes photos à Philippe — il peut te donner une estimation des travaux et t'aider à décider quoi faire vs vendre tel quel.",
   },
   unsure: {
-    title: "Étape 1 — Préparer la propriété",
+    title: "Étape 2 — Préparer la propriété",
     description:
       "On commence par une visite d'évaluation pour établir exactement quoi préparer avant la mise en marché — sans dépenser inutilement.",
   },
 };
 
-// Étape 2 — Définir le bon angle de vente (selon le type de propriété)
+// Étape 3 — Définir le bon angle de vente (selon le TYPE de propriété)
 const ANGLE_STEP: Record<PropertyType, ReportStep> = {
   maison: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
       "On positionne ta maison comme une résidence familiale clé en main : espaces de vie, quartier, écoles et milieu de vie. C'est l'angle qui déclenche le coup de cœur.",
   },
   condo: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
-      "On met de l'avant l'emplacement, la praticité et le style de vie sans entretien — l'argument gagnant pour un condo bien situé à Montréal.",
+      "On met de l'avant l'emplacement, la praticité et le style de vie sans entretien — l'argument gagnant pour un condo bien situé dans l'Est de Montréal.",
   },
   plex: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
-      "On cible les investisseurs et les acheteurs-occupants : rentabilité, revenus locatifs et potentiel de la propriété. Chaque chiffre devient un argument de vente.",
+      "On cible les investisseurs et les acheteurs-occupants : rentabilité, revenus locatifs et potentiel. Chaque chiffre devient un argument de vente.",
   },
   chalet: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
       "On vend un mode de vie : évasion, nature et rareté de l'emplacement. L'émotion prime, appuyée par une présentation visuelle forte.",
   },
   terrain: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
       "On met en valeur le potentiel : zonage, dimensions et projets possibles. On parle directement aux acheteurs et promoteurs qui cherchent ce type d'opportunité.",
   },
   autre: {
-    title: "Étape 2 — Définir le bon angle de vente",
+    title: "Étape 3 — Définir le bon angle de vente",
     description:
       "On identifie l'angle le plus fort selon les caractéristiques uniques de ta propriété et le type d'acheteur le plus susceptible d'y voir une opportunité.",
   },
 };
 
-function marketingStep(verdict: Verdict, pref?: SalePreference): ReportStep {
-  const base = "Étape 3 — Choisir la bonne stratégie de mise en marché";
-  if (verdict === "offensif") {
-    return {
-      title: base,
-      description:
-        "Photos professionnelles, vidéo immobilière et campagne locale ciblée. On crée un effet de rareté avec une mise en marché avant visites pour maximiser l'attention dès le lancement.",
-    };
+// Étape 4 — Stratégie de mise en marché & prix (selon l'OBJECTIF principal)
+function marketingStep(pref: SalePreference | undefined): ReportStep {
+  const title = "Étape 4 — La bonne stratégie de mise en marché";
+  switch (pref) {
+    case "highest_price":
+      return {
+        title,
+        description:
+          "Ta priorité, c'est le prix : on prend un peu plus de temps et on fait preuve de patience pour aller chercher le maximum. Positionnement précis, présentation soignée et négociation serrée.",
+      };
+    case "fast":
+      return {
+        title,
+        description:
+          "On met la propriété en ligne le plus vite possible avec un prix attirant qui génère de la demande — tout en évitant de la vendre en dessous de sa valeur. Objectif : créer un momentum dès le lancement.",
+      };
+    case "no_stress":
+      return {
+        title,
+        description:
+          "Tu veux vendre sans stress : parfait, un courtier s'occupe de tout, de A à Z. Préparation, photos, visites, offres et négociation — tu es accompagné à chaque étape.",
+      };
+    case "clear_strategy":
+      return {
+        title,
+        description:
+          "On ne met jamais la propriété en vente avant d'avoir une stratégie claire et acceptée par toi. On définit ensemble le prix, le calendrier et le plan de match avant le lancement.",
+      };
+    case "compare_options":
+      return {
+        title,
+        description:
+          "On te présente tes options clairement — prix, scénarios et délais — pour que tu décides en toute confiance, sans pression, avant de lancer quoi que ce soit.",
+      };
+    default:
+      return {
+        title,
+        description:
+          "On bâtit une mise en marché sur mesure : bon prix, bonnes photos et bon calendrier pour maximiser l'intérêt dès le lancement.",
+      };
   }
-  if (verdict === "preparation") {
-    return {
-      title: base,
-      description:
-        "On établit un positionnement prix réaliste et un plan de préparation. Une fois la propriété prête, on déploie photos pro et campagne locale au bon moment.",
-    };
-  }
-  // strategique — nuance selon l'objectif
-  const prefLine =
-    pref === "highest_price"
-      ? "On mise sur un positionnement prix précis et une présentation haut de gamme pour justifier chaque dollar."
-      : pref === "fast"
-      ? "On structure une mise en marché rapide et large pour générer un maximum de visites tôt."
-      : "On combine photos professionnelles, positionnement prix et campagne locale pour attirer les bons acheteurs.";
-  return { title: base, description: `${prefLine} Vidéo immobilière et mise en marché avant visites au besoin.` };
 }
 
-function brokerStep(verdict: Verdict): ReportStep {
+// Étape 5 — Valider et lancer avec Philippe (intègre le TIMING → prix)
+function validateStep(timing: Answers["timing"]): ReportStep {
+  const echeance =
+    timing && timing !== "unsure"
+      ? `selon ton échéancier (${TIMING_LABEL[timing].toLowerCase()})`
+      : "selon l'échéancier qu'on fixe ensemble";
   return {
-    title: "Étape 4 — Valider le plan avec un courtier",
-    description:
-      verdict === "preparation"
-        ? "Un appel avec Philippe Laroche pour valider ton plan de préparation et fixer le bon moment pour lancer — sans pression."
-        : "Un appel avec Philippe Laroche pour valider le plan, confirmer le prix de mise en marché et fixer la date de lancement.",
+    title: "Étape 5 — Valider et lancer avec Philippe",
+    description: `Un appel avec Philippe Laroche pour valider ton plan, confirmer le prix de mise en marché ${echeance}, et fixer la date de lancement. Rien n'est mis en vente sans ton accord.`,
   };
 }
 
@@ -165,11 +221,11 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
 
   const marketInsightByVerdict: Record<Verdict, string> = {
     offensif:
-      "Le marché montréalais reste actif pour les propriétés bien préparées et bien positionnées : elles attirent l'attention rapidement et se démarquent dès les premiers jours.",
+      "Dans l'Est de Montréal, les propriétés bien préparées et bien positionnées attirent l'attention rapidement et se démarquent dès les premiers jours.",
     strategique:
-      "À Montréal, l'écart de résultat entre une propriété bien préparée et une propriété lancée trop vite est important. La préparation et le prix font toute la différence.",
+      "Dans l'Est de Montréal, l'écart de résultat entre une propriété bien préparée et une propriété lancée trop vite est important. La préparation et le prix font toute la différence.",
     preparation:
-      "Le marché montréalais récompense les vendeurs préparés. Prendre quelques semaines pour bien positionner ta propriété peut se traduire par un meilleur prix final.",
+      "Le marché de l'Est de Montréal récompense les vendeurs préparés. Prendre quelques semaines pour bien positionner ta propriété peut se traduire par un meilleur prix final.",
   };
 
   const stats = [
@@ -201,10 +257,11 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
   ];
 
   const steps: ReportStep[] = [
+    motivationStep(answers.sellingMotivation),
     PREP_STEP[condition],
     ANGLE_STEP[propertyType],
-    marketingStep(verdict, answers.salePreference),
-    brokerStep(verdict),
+    marketingStep(answers.salePreference),
+    validateStep(answers.timing),
   ];
 
   const motivationLabel = answers.sellingMotivation

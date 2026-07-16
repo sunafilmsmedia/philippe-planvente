@@ -17,10 +17,33 @@ Le verdict détermine le ton du plan :
 - "strategique" (50-69) : bon potentiel mais le résultat dépend de la préparation, du prix, du positionnement et du timing. Plan stratégique avant de mettre sur le marché.
 - "preparation" (<50) : mieux vaut préparer la propriété ou clarifier la situation avant de vendre. Plan de préparation, sans pousser à vendre trop vite.
 
+Conseils réels de Philippe à intégrer selon les réponses :
+
+MOTIVATION (pourquoi vendre) :
+- Acheter plus grand : valider la capacité financière (pré-approbation) AVANT de vendre, pour pouvoir acheter avant/en parallèle sans stress de transition.
+- Changer de région : cibler la nouvelle région dès maintenant (emplacement, quartiers, services, épiceries, écoles), faire ses recherches en amont.
+- Réduire les paiements : utiliser la meilleure méthode et la meilleure mise en marché pour aller chercher le prix le plus élevé possible.
+- Séparation / changement personnel : s'assurer d'abord d'une bonne entente entre les parties pour fluidifier les décisions et protéger la valeur.
+
+ÉTAT DE LA PROPRIÉTÉ :
+- Prête : parfait, on valide les derniers détails.
+- Rénovations mineures : cibler les rénos à fort levier; MAIS s'il y en a trop, souvent plus rentable de vendre tel quel au meilleur prix. Photos = staging virtuel; au besoin Philippe réfère ses compagnies de confiance avant une visite.
+- Home staging : staging virtuel pour les photos + compagnies partenaires de Philippe avant les visites.
+- Beaucoup de travaux : besoin d'un professionnel; le client envoie des photos à Philippe qui donne une estimation des travaux.
+
+OBJECTIF PRINCIPAL :
+- Vendre le plus cher : prendre un peu plus de temps, faire preuve de patience pour maximiser le prix.
+- Vendre rapidement : en ligne le plus vite possible, prix attirant qui génère la demande, sans vendre sous la valeur.
+- Vendre sans stress : le courtier s'occupe de tout, de A à Z.
+- Stratégie claire : ne jamais mettre en vente avant une stratégie claire ACCEPTÉE par le client.
+- Comparer les options : présenter les options (prix, scénarios, délais) pour décider en confiance.
+
+TIMING : détermine surtout le prix / positionnement (échéancier plus court = prix plus attractif; plus de temps = viser le meilleur prix).
+
 Règles clés :
-- "steps" : exactement 4 étapes. Elles suivent cette logique : 1) Préparer la propriété (selon l'état déclaré), 2) Définir le bon angle de vente (selon le type de propriété), 3) Choisir la stratégie de mise en marché, 4) Valider le plan avec le courtier (Philippe Laroche).
+- "steps" : exactement 5 étapes, dans cet ordre : 1) Sécuriser ta prochaine étape (selon la motivation), 2) Préparer la propriété (selon l'état), 3) Définir le bon angle de vente (selon le type), 4) La bonne stratégie de mise en marché (selon l'objectif + timing/prix), 5) Valider et lancer avec Philippe. Chaque étape doit refléter concrètement les conseils ci-dessus.
 - "stats" : exactement 4 entrées. La 1ère est toujours le score de préparation ("${""}/100"). Utilise les données fournies (valeur estimée, équité, timing, objectif) pour les autres.
-- "marketInsight" : une observation plausible sur le marché immobilier de Montréal (sans inventer de chiffres précis).
+- "marketInsight" : une observation plausible sur le marché immobilier de l'Est de Montréal (sans inventer de chiffres précis).
 - "cta" : un appel à l'action doux vers le courtier (ex : "Parler à un courtier pour valider mon plan").
 - Pas de markdown, pas d'emojis, pas de formules creuses.`;
 
@@ -95,7 +118,13 @@ export async function POST(req: Request) {
           { label: "Équité", value: "...", detail: "..." },
           { label: "Timing visé", value: "...", detail: "..." },
         ],
-        steps: [{ title: "Étape 1 — ...", description: "..." }],
+        steps: [
+          { title: "Étape 1 — Sécuriser ta prochaine étape", description: "..." },
+          { title: "Étape 2 — Préparer la propriété", description: "..." },
+          { title: "Étape 3 — Définir le bon angle de vente", description: "..." },
+          { title: "Étape 4 — La bonne stratégie de mise en marché", description: "..." },
+          { title: "Étape 5 — Valider et lancer avec Philippe", description: "..." },
+        ],
         marketInsight: "observation du marché immobilier de Montréal",
         cta: "appel à l'action vers le courtier",
       },
