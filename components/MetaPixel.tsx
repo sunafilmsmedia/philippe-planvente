@@ -2,9 +2,11 @@
 
 import Script from "next/script";
 
-// Par-courtier — défini via NEXT_PUBLIC_META_PIXEL_ID sur Vercel.
-// Sans valeur, le pixel n'est pas chargé (aucun tracking).
-const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
+// ⚠️ PAR-COURTIER — pixel de Philippe Laroche.
+// Si tu réutilises ce projet pour un AUTRE courtier, change cette valeur
+// (ou définis NEXT_PUBLIC_META_PIXEL_ID sur Vercel, qui a priorité),
+// sinon ses statistiques polluent le compte publicitaire de Philippe.
+const PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "1255433172926141";
 
 declare global {
   interface Window {
