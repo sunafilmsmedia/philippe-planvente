@@ -2,9 +2,10 @@
 
 import Script from "next/script";
 
-// Par-courtier — défini via NEXT_PUBLIC_CLARITY_PROJECT_ID sur Vercel.
-// Sans valeur, Clarity n'est pas chargé.
-const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? "";
+// ⚠️ PAR-COURTIER — projet Clarity de Philippe Laroche.
+// Si tu réutilises ce projet pour un AUTRE courtier, change cette valeur
+// (ou définis NEXT_PUBLIC_CLARITY_PROJECT_ID sur Vercel, qui a priorité).
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? "xr4bykze21";
 
 export default function Clarity() {
   if (!CLARITY_PROJECT_ID) return null;
