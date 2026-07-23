@@ -104,6 +104,10 @@ export async function POST(req: Request) {
   const webhookUrl = process.env.CRM_WEBHOOK_URL;
   const webhookSecret = process.env.CRM_WEBHOOK_SECRET;
 
+  // État de transmission au CRM — exposé dans la réponse pour pouvoir
+  // diagnostiquer sans deviner (ne révèle jamais l'URL du webhook).
+  let webhook: "not_configured" | "ok" | "failed" = "not_configured";
+
   if (webhookUrl) {
     try {
       const headers: Record<string, string> = { "Content-Type": "application/json" };
@@ -113,10 +117,12 @@ export async function POST(req: Request) {
         headers,
         body: JSON.stringify(payload),
       });
+      webhook = res.ok ? "ok" : "failed";
       if (!res.ok) {
         console.error("[lead] Webhook returned", res.status);
       }
     } catch (err) {
+      webhook = "failed";
       console.error("[lead] Webhook failed", err);
     }
   } else {
@@ -127,5 +133,6 @@ export async function POST(req: Request) {
     stored: true,
     verdict: scoring.verdict,
     leadType,
+    webhook,
   });
 }
