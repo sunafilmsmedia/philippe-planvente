@@ -5,7 +5,9 @@ import Script from "next/script";
 // ⚠️ PAR-COURTIER — projet Clarity de Philippe Laroche.
 // Si tu réutilises ce projet pour un AUTRE courtier, change cette valeur
 // (ou définis NEXT_PUBLIC_CLARITY_PROJECT_ID sur Vercel, qui a priorité).
-const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ?? "xr4bykze21";
+// `||` (pas `??`) pour que le défaut s'applique aussi si la variable est
+// définie mais VIDE sur Vercel.
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || "xr4bykze21";
 
 export default function Clarity() {
   if (!CLARITY_PROJECT_ID) return null;
