@@ -112,6 +112,28 @@ body {
   animation: ai-shimmer 2.5s linear infinite;
 }
 
+/* AI rainbow — bleu / blanc / rouge (couleurs RE/MAX), défilement continu */
+.ai-rainbow {
+  background-image: linear-gradient(
+    90deg,
+    #1f4fff 0%,
+    #6aa0ff 14%,
+    #ffffff 27%,
+    #ff7a6e 41%,
+    #e2231a 54%,
+    #ff7a6e 67%,
+    #ffffff 80%,
+    #6aa0ff 92%,
+    #1f4fff 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: ai-shimmer 4s linear infinite;
+}
+
 /* Pulse dot */
 @keyframes soft-pulse {
   0%, 100% { transform: scale(1); opacity: 1; }
