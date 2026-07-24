@@ -9,7 +9,7 @@ import type {
   ScoringResult,
   Verdict,
 } from "./types";
-import { formatCurrency } from "./format";
+import { VALUE_BRACKET_LABEL } from "./questions";
 
 const VERDICT_HEADLINE: Record<Verdict, string> = {
   offensif: "Tu es dans une excellente position pour vendre",
@@ -241,13 +241,13 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
     },
     {
       label: "Valeur estimée",
-      value: metrics.estimatedValue ? formatCurrency(metrics.estimatedValue) : "—",
-      detail: "Selon ton estimation actuelle.",
+      value: answers.valueBracket ? VALUE_BRACKET_LABEL[answers.valueBracket] : "—",
+      detail: "Selon la tranche que tu as indiquée.",
     },
     {
       label: "Équité",
       value: metrics.equityLabel,
-      detail: "Basée sur ton solde hypothécaire déclaré.",
+      detail: "Estimée selon tes années de possession.",
     },
     {
       label: "Timing visé",

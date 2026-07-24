@@ -97,26 +97,6 @@ export default function PreRevealScreen({ onContinue }: Props) {
             )}
           </span>
         </motion.button>
-
-        {/* Bouton secondaire — petit, soft */}
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.7 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          onClick={() => handleClick("no")}
-          disabled={!ready}
-          className="
-            mt-6 mx-auto
-            text-xs sm:text-sm text-[var(--color-muted-2)]
-            hover:text-[var(--color-ink)]
-            transition-colors
-            underline underline-offset-4 decoration-black/15
-            block
-            disabled:cursor-wait
-          "
-        >
-          Non, je veux juste voir mon score
-        </motion.button>
       </motion.div>
     </div>
   );

@@ -21,12 +21,12 @@ export type SellingTiming =
   | "6_12" // 6 à 12 mois
   | "unsure"; // Je ne sais pas encore
 
-export type MortgageBalance =
-  | "under_100" // Moins de 100 000 $
-  | "100_250" // 100 000 $ à 250 000 $
-  | "250_400" // 250 000 $ à 400 000 $
-  | "over_400" // 400 000 $ et plus
-  | "unknown"; // Je ne sais pas
+// Années de possession (proxy d'équité : amortissement ~25 ans + plus-value).
+export type YearsOwned =
+  | "0_2" // Moins de 3 ans
+  | "3_7" // 3 à 7 ans
+  | "8_14" // 8 à 14 ans
+  | "15_plus"; // 15 ans ou plus
 
 export type PropertyCondition =
   | "ready" // Prête à vendre
@@ -42,6 +42,15 @@ export type SalePreference =
   | "clear_strategy" // Avoir une stratégie claire
   | "compare_options"; // Comparer mes options
 
+export type ValueBracket =
+  | "300_400"
+  | "400_500"
+  | "500_600"
+  | "600_700"
+  | "700_800"
+  | "800_900"
+  | "autre";
+
 export type Region = {
   id: string;
   name: string;
@@ -53,8 +62,11 @@ export interface Answers {
   propertyType?: PropertyType;
   sellingMotivation?: SellingMotivation;
   timing?: SellingTiming;
+  // Tranche de valeur choisie + valeur numérique dérivée (point milieu de la
+  // tranche) utilisée pour le calcul d'équité et le CRM.
+  valueBracket?: ValueBracket;
   estimatedValue?: number;
-  mortgageBalance?: MortgageBalance;
+  yearsOwned?: YearsOwned;
   propertyCondition?: PropertyCondition;
   salePreference?: SalePreference;
   // hasContract = true bloque le formulaire (déjà sous contrat de courtage

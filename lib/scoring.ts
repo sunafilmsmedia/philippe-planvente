@@ -1,4 +1,4 @@
-import type { Answers, MortgageBalance, ScoringFactor, ScoringResult, Verdict } from "./types";
+import type { Answers, ScoringFactor, ScoringResult, Verdict } from "./types";
 
 const BASE_SCORE = 50;
 
@@ -16,63 +16,59 @@ function verdictFor(score: number): Verdict {
   return "preparation";
 }
 
-// Montant représentatif du solde hypothécaire pour estimer le ratio d'équité.
-const MORTGAGE_MIDPOINT: Record<Exclude<MortgageBalance, "unknown">, number> = {
-  under_100: 75_000,
-  "100_250": 175_000,
-  "250_400": 325_000,
-  over_400: 500_000,
-};
-
-// Retourne { delta, label, tone, equityLabel } pour l'équité approximative.
+// Équité estimée à partir des ANNÉES de possession.
+// Logique : amortissement sur ~25 ans (chaque année rembourse ~4 % du capital)
+// + plus-value qui s'accumule avec le temps. Plus tu es propriétaire depuis
+// longtemps, plus ton équité est forte (ex. 12 ans ≈ 50 % remboursé + plus-value).
 function scoreEquity(answers: Answers): {
   delta: number;
   factor: ScoringFactor | null;
   equityLabel: string;
 } {
-  const balance = answers.mortgageBalance;
-  const value = Math.max(0, answers.estimatedValue ?? 0);
-
-  if (!balance || balance === "unknown") {
-    return { delta: 0, factor: null, equityLabel: "À confirmer" };
-  }
-
-  const mortgage = MORTGAGE_MIDPOINT[balance];
-
-  // Sans valeur estimée fiable, on retombe sur le solde seul.
-  const ratio = value > 0 ? mortgage / value : mortgage / 400_000;
-
-  if (ratio < 0.35) {
-    return {
-      delta: 12,
-      factor: {
-        label: "Équité élevée — hypothèque faible face à la valeur",
+  switch (answers.yearsOwned) {
+    case "15_plus":
+      return {
         delta: 12,
-        tone: "positive",
-      },
-      equityLabel: "Équité élevée",
-    };
-  }
-  if (ratio < 0.6) {
-    return {
-      delta: 6,
-      factor: {
-        label: "Équité correcte — bonne marge de manœuvre",
+        factor: {
+          label: "Équité élevée — hypothèque bien remboursée et forte plus-value (15+ ans)",
+          delta: 12,
+          tone: "positive",
+        },
+        equityLabel: "Équité élevée",
+      };
+    case "8_14":
+      return {
         delta: 6,
-        tone: "positive",
-      },
-      equityLabel: "Équité correcte",
-    };
+        factor: {
+          label: "Équité correcte — environ la moitié remboursée + plus-value (8 à 14 ans)",
+          delta: 6,
+          tone: "positive",
+        },
+        equityLabel: "Équité correcte",
+      };
+    case "3_7":
+      return {
+        delta: 2,
+        factor: {
+          label: "Équité en construction (3 à 7 ans de possession)",
+          delta: 2,
+          tone: "neutral",
+        },
+        equityLabel: "Équité en construction",
+      };
+    case "0_2":
+      return {
+        delta: -3,
+        factor: {
+          label: "Équité limitée — achat récent, peu de capital remboursé (moins de 3 ans)",
+          delta: -3,
+          tone: "negative",
+        },
+        equityLabel: "Équité limitée",
+      };
+    default:
+      return { delta: 0, factor: null, equityLabel: "À confirmer" };
   }
-  return {
-    delta: -3,
-    factor: {
-      label: "Équité limitée — hypothèque élevée face à la valeur",
-      delta: -3,
-      tone: "negative",
-    },
-    equityLabel: "Équité limitée",
-  };
 }
 
 export function computeScoring(answers: Answers): ScoringResult {

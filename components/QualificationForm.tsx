@@ -2,12 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { getVisibleQuestions, isAnswered } from "@/lib/questions";
-import type { Answers } from "@/lib/types";
+import { getVisibleQuestions, isAnswered, VALUE_BRACKET_MID } from "@/lib/questions";
+import type { Answers, ValueBracket } from "@/lib/types";
 import ProgressBar from "./ProgressBar";
 import ChoiceQuestion from "./questions/ChoiceQuestion";
 import BooleanQuestion from "./questions/BooleanQuestion";
-import CurrencyQuestion from "./questions/CurrencyQuestion";
 import RegionMap from "./questions/RegionMap";
 import ExistingBrokerBlocker from "./questions/ExistingBrokerBlocker";
 
@@ -264,19 +263,26 @@ function QuestionRenderer({
       );
     case "estimatedValue":
       return (
-        <CurrencyQuestion
-          value={answers.estimatedValue}
-          onChange={(v) => onUpdate({ estimatedValue: v }, false)}
-          placeholder="525 000"
-          helper="Aucun jugement — c'est juste pour calibrer ton plan."
+        <ChoiceQuestion
+          choices={choices!}
+          value={answers.valueBracket}
+          onChange={(v) =>
+            onUpdate(
+              {
+                valueBracket: v as Answers["valueBracket"],
+                estimatedValue: VALUE_BRACKET_MID[v as ValueBracket],
+              },
+              autoAdvance
+            )
+          }
         />
       );
-    case "mortgageBalance":
+    case "yearsOwned":
       return (
         <ChoiceQuestion
           choices={choices!}
-          value={answers.mortgageBalance}
-          onChange={(v) => onUpdate({ mortgageBalance: v as Answers["mortgageBalance"] }, autoAdvance)}
+          value={answers.yearsOwned}
+          onChange={(v) => onUpdate({ yearsOwned: v as Answers["yearsOwned"] }, autoAdvance)}
         />
       );
     case "propertyCondition":

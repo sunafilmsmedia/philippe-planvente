@@ -56,28 +56,6 @@ export default function Hero({ onStart }: HeroProps) {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-3xl text-center"
       >
-        {/* Secteurs desservis — en haut */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7 }}
-          className="mb-8 sm:mb-10"
-        >
-          <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--color-muted-2)] mb-3">
-            Secteurs desservis
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg mx-auto">
-            {SECTORS.map((s) => (
-              <span
-                key={s}
-                className="px-3 py-1.5 rounded-full text-xs font-medium text-[var(--color-brand-200)] bg-white/70 border border-black/5 shadow-[0_2px_8px_-4px_rgba(74,22,17,0.18)]"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </motion.div>
-
         {/* Guide visuel — comment on génère ton plan */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
