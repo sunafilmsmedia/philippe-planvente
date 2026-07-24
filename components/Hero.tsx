@@ -128,7 +128,7 @@ export default function Hero({ onStart }: HeroProps) {
               active:translate-y-0
             "
           >
-            <span>Obtenir ma stratégie</span>
+            <span>Obtenir mon plan</span>
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
