@@ -4,8 +4,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import Hero from "@/components/Hero";
-import BrokerBadge from "@/components/BrokerBadge";
 import TopLogos from "@/components/TopLogos";
+import Reviews from "@/components/Reviews";
 import QualificationForm from "@/components/QualificationForm";
 import LoadingScreen from "@/components/LoadingScreen";
 import PreRevealScreen from "@/components/PreRevealScreen";
@@ -103,6 +103,7 @@ export default function Home() {
         {stage === "hero" && (
           <motion.div key="hero" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.5 }}>
             <Hero onStart={() => setStage("form")} />
+            <Reviews />
           </motion.div>
         )}
         {stage === "form" && (
@@ -152,7 +153,6 @@ export default function Home() {
             transition={{ duration: 0.4 }}
           >
             <TopLogos />
-            <BrokerBadge />
           </motion.div>
         )}
       </AnimatePresence>

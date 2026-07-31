@@ -56,7 +56,7 @@ export default function QualificationForm({ onComplete, onNoSell, onExit }: Prop
   }, []);
 
   const updateAndMaybeAdvance = useCallback(
-    (partial: Partial<Answers>, autoAdvance: boolean) => {
+    (partial: Partial<Answers>, autoAdvance: boolean, delayMs: number = AUTO_ADVANCE_MS) => {
       let nextAnswers: Answers = answers;
       setAnswers((prev) => {
         const next = { ...prev, ...partial };
@@ -95,7 +95,7 @@ export default function QualificationForm({ onComplete, onNoSell, onExit }: Prop
             }
             return i + 1;
           });
-        }, AUTO_ADVANCE_MS);
+        }, delayMs);
       }
     },
     [answers, onComplete, onNoSell]
@@ -226,7 +226,7 @@ interface RendererProps {
   answers: Answers;
   choices?: { value: string; label: string; hint?: string }[];
   autoAdvance: boolean;
-  onUpdate: (partial: Partial<Answers>, autoAdvance: boolean) => void;
+  onUpdate: (partial: Partial<Answers>, autoAdvance: boolean, delayMs?: number) => void;
 }
 
 function QuestionRenderer({
@@ -322,7 +322,7 @@ function QuestionRenderer({
       return (
         <RegionMap
           value={answers.region}
-          onChange={(id) => onUpdate({ region: id }, false)}
+          onChange={(id) => onUpdate({ region: id }, true, 1100)}
         />
       );
     default:
