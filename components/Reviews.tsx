@@ -2,6 +2,9 @@
 
 import { motion } from "framer-motion";
 
+const GOOGLE_REVIEWS_URL =
+  "https://www.google.com/search?sca_esv=e755c4fcff4cb9a6&si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_1uC17_NXuPMRA572p3xvm3Oh8D_-kiKveZcert_lUTqVeV3cNIPIkuYJVs3QW__TYJD-3bPXblNPL4bEsElXjp0gqyaohlmr-cfnuKarcl1lofDVg%3D%3D&q=Philippe+Laroche+immobilier+Avis";
+
 const REVIEWS = [
   {
     name: "Justine Thélin",
@@ -71,13 +74,16 @@ export default function Reviews() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {REVIEWS.map((r, i) => (
-          <motion.figure
+          <motion.a
             key={r.name}
+            href={GOOGLE_REVIEWS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-60px" }}
             transition={{ duration: 0.5, delay: (i % 3) * 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col"
+            className="glass-card rounded-2xl p-5 sm:p-6 flex flex-col no-underline transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_-30px_rgba(74,22,17,0.35)]"
           >
             <Stars />
             <blockquote className="mt-3 text-sm sm:text-[15px] text-[var(--color-brand-200)] leading-relaxed flex-1">
@@ -92,8 +98,22 @@ export default function Reviews() {
                 <span className="block text-[11px] text-[var(--color-muted-2)] truncate">{r.meta}</span>
               </span>
             </figcaption>
-          </motion.figure>
+          </motion.a>
         ))}
+      </div>
+
+      <div className="mt-8 text-center">
+        <a
+          href={GOOGLE_REVIEWS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-brand-500)] hover:text-[var(--color-brand-700)] transition-colors"
+        >
+          Voir tous les avis sur Google
+          <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </a>
       </div>
     </section>
   );
