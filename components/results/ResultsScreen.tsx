@@ -78,10 +78,6 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           <h1 className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] leading-[1.1] tracking-tight text-balance">
             Ton plan de vente est prêt.
           </h1>
-          <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-md mx-auto">
-            Laisse-nous ton contact pour débloquer ton plan complet et recevoir un appel
-            personnalisé avec {BROKER.name}.
-          </p>
         </motion.div>
 
         <div className="mt-10">

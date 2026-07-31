@@ -104,10 +104,6 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
       <h3 className="font-serif text-2xl sm:text-3xl text-[var(--color-brand-100)] leading-tight text-balance">
         Où veux-tu recevoir ton plan de vente complet ?
       </h3>
-      <p className="mt-2 text-sm sm:text-base text-[var(--color-muted)] leading-relaxed">
-        {BROKER.name} t&apos;appellera dans les 24 h pour te présenter ton plan et te guider,
-        étape par étape.
-      </p>
 
       <div className="mt-6 space-y-3">
         <Field
