@@ -28,6 +28,11 @@ const REVIEWS = [
     meta: "Avis Google",
     text: "Service professionnel, courtois, et il travaille pour nous sans jamais de pression. Nous avons plusieurs transactions avec Philippe et il a toujours été à la hauteur. Hautement recommandé !",
   },
+  {
+    name: "Jason Tawfik",
+    meta: "Local Guide · 14 avis",
+    text: "Philippe m'a été recommandé par une collègue, et il a été excellent ! C'était mon premier achat et il a pris le temps de bien me guider et de m'expliquer chaque étape du processus. Toujours disponible.",
+  },
 ];
 
 function Stars() {
