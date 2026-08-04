@@ -97,12 +97,12 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
       <div className="flex items-center gap-2 mb-1">
         <span className="w-1 h-1 rounded-full bg-[var(--color-gold)]" />
         <span className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-gold-soft)]">
-          Débloquer mon plan complet
+          Statistiques du marché + plan de vente
         </span>
       </div>
 
       <h3 className="font-serif text-2xl sm:text-3xl text-[var(--color-brand-100)] leading-tight text-balance">
-        Où veux-tu recevoir ton plan de vente complet ?
+        Où veux-tu qu'on t'envoie les statistiques du marché et ton plan de vente ?
       </h3>
 
       <div className="mt-6 space-y-3">
