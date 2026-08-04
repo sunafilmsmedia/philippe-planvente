@@ -47,13 +47,14 @@ export default function PreRevealScreen({ onContinue }: Props) {
         </motion.div>
 
         <p className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-brand-300)] mb-3">
-          Plan de vente
+          Ton estimation
         </p>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
-          Ton plan de vente est prêt.
+          On a calculé ton prix.
         </h1>
         <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-md mx-auto">
-          Veux-tu recevoir ton plan complet, personnalisé selon ta propriété et ta situation ?
+          On a estimé le prix de ta propriété selon les statistiques de vente
+          récentes de ton secteur. Reçois ton estimation complète et ton plan de vente.
         </p>
 
         {/* Bouton primaire — option recommandée */}
@@ -78,10 +79,10 @@ export default function PreRevealScreen({ onContinue }: Props) {
           "
         >
           <span className="block font-medium text-base sm:text-lg">
-            Oui, je veux recevoir mon plan complet
+            Oui, voir mon prix et mon plan
           </span>
           <span className="block text-xs sm:text-sm text-white/80 mt-1">
-            Plan en 4 étapes + appel personnalisé
+            Estimation + plan de vente personnalisé
           </span>
           <span className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center w-5 h-5">
             {ready ? (
