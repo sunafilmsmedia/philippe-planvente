@@ -123,8 +123,9 @@ export interface AnalyzeResponse {
   scoring: ScoringResult;
   report: Report;
   generatedBy: "claude" | "fallback";
-  // Prix de vente moyen du secteur (moyenne 6 ans) — null si non disponible.
+  // Prix de vente moyen du secteur (2025) — null si non disponible.
   marketPrice?: number | null;
+  marketGrowth?: string | null; // croissance depuis 2019, ex. "+72 %"
   regionName?: string;
 }
 

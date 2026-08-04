@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { computeScoring } from "@/lib/scoring";
 import { buildFallbackReport } from "@/lib/fallbackReport";
-import { avgPriceFor } from "@/lib/marketData";
+import { avgPriceFor, growthFor } from "@/lib/marketData";
 import { REGIONS } from "@/lib/regions";
 import type { AnalyzeResponse, Answers, Report } from "@/lib/types";
 
@@ -94,6 +94,7 @@ export async function POST(req: Request) {
   // Prix de vente moyen du secteur (moyenne 6 ans) — même donnée pour les
   // deux chemins (IA ou fallback).
   const marketPrice = avgPriceFor(answers.region, answers.propertyType);
+  const marketGrowth = growthFor(answers.region, answers.propertyType);
   const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? "";
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -103,6 +104,7 @@ export async function POST(req: Request) {
       report: fallback,
       generatedBy: "fallback",
       marketPrice,
+      marketGrowth,
       regionName,
     };
     return NextResponse.json(payload);
@@ -165,6 +167,7 @@ export async function POST(req: Request) {
         report,
         generatedBy: "claude",
         marketPrice,
+        marketGrowth,
         regionName,
       };
       return NextResponse.json(payload);
@@ -178,6 +181,7 @@ export async function POST(req: Request) {
     report: fallback,
     generatedBy: "fallback",
     marketPrice,
+    marketGrowth,
     regionName,
   };
   return NextResponse.json(payload);

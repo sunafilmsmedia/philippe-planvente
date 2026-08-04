@@ -39,6 +39,14 @@ const VERDICT_BADGE: Record<Verdict, { label: string; color: string; bg: string;
   },
 };
 
+const PROPERTY_LABEL: Record<string, string> = {
+  maison: "Maison unifamiliale",
+  condo: "Condo",
+  plex: "Plex",
+  terrain: "Terrain",
+  autre: "Propriété",
+};
+
 type SubmissionState =
   | { kind: "pending" }
   | { kind: "done"; stored: boolean; firstName: string };
@@ -142,7 +150,7 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
         <ScoreOnlyCta verdict={scoring.verdict} onRestart={onRestart} generatedBy={analyze.generatedBy} />
       ) : (
         <>
-          {/* Prix de vente moyen du secteur (moyenne 6 ans) */}
+          {/* Prix de vente moyen du secteur (2025) */}
           {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -151,13 +159,22 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
               className="mt-6 rounded-3xl p-6 sm:p-7 text-center bg-gradient-to-br from-[var(--color-gold)]/12 to-transparent border border-[var(--color-gold)]/35"
             >
               <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-gold-soft)]">
-                Prix de vente moyen{analyze.regionName ? ` — ${analyze.regionName}` : ""}
+                Prix de vente moyen
+                {answers.propertyType ? ` · ${PROPERTY_LABEL[answers.propertyType]}` : ""}
+                {analyze.regionName ? ` — ${analyze.regionName}` : ""}
               </p>
-              <p className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] mt-2">
-                {formatCurrency(analyze.marketPrice)}
-              </p>
+              <div className="mt-2 flex items-baseline justify-center gap-3 flex-wrap">
+                <p className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)]">
+                  {formatCurrency(analyze.marketPrice)}
+                </p>
+                {analyze.marketGrowth && (
+                  <span className="text-sm font-semibold text-emerald-700">
+                    ▲ {analyze.marketGrowth} depuis 2019
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-[var(--color-muted)] mt-2">
-                Moyenne des 6 dernières années · à titre indicatif
+                Moyenne 2025 · à titre indicatif
               </p>
             </motion.div>
           )}
