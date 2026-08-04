@@ -87,6 +87,7 @@ export async function POST(req: Request) {
     timing: answers.timing ?? "",
     estimatedValue: answers.estimatedValue ?? 0,
     yearsOwned: answers.yearsOwned ?? 0,
+    propertyCondition: answers.propertyCondition ?? "",
     salePreference: answers.salePreference ?? "",
     region: regionName,
     regionId: answers.region ?? "",

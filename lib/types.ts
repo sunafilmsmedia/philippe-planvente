@@ -21,6 +21,12 @@ export type SellingTiming =
   | "6_12" // 6 à 12 mois
   | "unsure"; // Je ne sais pas encore
 
+export type PropertyCondition =
+  | "ready" // Rénovée et prête à vendre
+  | "minor_reno" // Quelques rénovations à faire
+  | "major_work" // Beaucoup de travaux à prévoir
+  | "unsure"; // Je ne suis pas sûr
+
 export type SalePreference =
   | "highest_price" // Vendre le plus cher possible
   | "fast" // Vendre rapidement
@@ -42,6 +48,7 @@ export interface Answers {
   // Saisie manuelle (précis) : estimation du propriétaire + années de possession.
   estimatedValue?: number;
   yearsOwned?: number;
+  propertyCondition?: PropertyCondition;
   salePreference?: SalePreference;
   // hasContract = true bloque le formulaire (déjà sous contrat de courtage
   // avec un autre courtier — restriction légale au Québec).

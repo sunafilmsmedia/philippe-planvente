@@ -1,5 +1,6 @@
 import type {
   Answers,
+  PropertyCondition,
   PropertyType,
   Report,
   ReportStep,
@@ -95,11 +96,28 @@ function motivationStep(m: SellingMotivation | undefined): ReportStep {
   }
 }
 
-// Étape 2 — Préparer la propriété (générique — l'état est évalué avec Philippe)
-const PREP_STEP: ReportStep = {
-  title: "Étape 2 — Préparer la propriété",
-  description:
-    "On prépare ta propriété pour qu'elle se démarque : dépersonnalisation, éclairage et petites retouches à fort levier, puis des photos qui accrochent (staging virtuel au besoin). Rénover peut aider, mais s'il y a trop de travaux, vendre tel quel au meilleur prix est souvent plus rentable — Philippe peut te référer ses compagnies de confiance et estimer les travaux avant la mise en marché.",
+// Étape 2 — Préparer la propriété (selon l'ÉTAT déclaré)
+const PREP_STEP: Record<PropertyCondition, ReportStep> = {
+  ready: {
+    title: "Étape 2 — Préparer la propriété",
+    description:
+      "Ta propriété est rénovée et prête — c'est parfait. On valide les derniers détails (dépersonnalisation, éclairage, petites retouches) et on capte des photos qui accrochent pour la présenter à son plein potentiel dès le lancement.",
+  },
+  minor_reno: {
+    title: "Étape 2 — Préparer la propriété",
+    description:
+      "On cible les rénovations à fort levier. Rénover peut aider, mais s'il y en a trop, il est souvent plus rentable de vendre tel quel au meilleur prix. Pour les photos, on fait du staging virtuel; au besoin, Philippe te réfère ses compagnies de confiance avant une visite.",
+  },
+  major_work: {
+    title: "Étape 2 — Préparer la propriété",
+    description:
+      "Il y a des travaux importants : tu as besoin d'un regard professionnel. Envoie tes photos à Philippe — il peut te donner une estimation des travaux et t'aider à décider quoi faire vs vendre tel quel.",
+  },
+  unsure: {
+    title: "Étape 2 — Préparer la propriété",
+    description:
+      "On commence par une visite d'évaluation pour établir exactement quoi préparer avant la mise en marché — sans dépenser inutilement.",
+  },
 };
 
 // Étape 3 — Définir le bon angle de vente (selon le TYPE de propriété)
@@ -194,6 +212,7 @@ function validateStep(timing: Answers["timing"]): ReportStep {
 export function buildFallbackReport(answers: Answers, scoring: ScoringResult): Report {
   const { score, verdict, metrics } = scoring;
   const propertyType = answers.propertyType ?? "autre";
+  const condition = answers.propertyCondition ?? "unsure";
 
   const marketInsightByVerdict: Record<Verdict, string> = {
     offensif:
@@ -234,7 +253,7 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
 
   const steps: ReportStep[] = [
     motivationStep(answers.sellingMotivation),
-    PREP_STEP,
+    PREP_STEP[condition],
     ANGLE_STEP[propertyType],
     marketingStep(answers.salePreference),
     validateStep(answers.timing),

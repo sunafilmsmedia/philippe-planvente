@@ -131,7 +131,26 @@ export function computeScoring(answers: Answers): ScoringResult {
   score += equity.delta;
   if (equity.factor) factors.push(equity.factor);
 
-  // 4. Objectif principal
+  // 4. État de la propriété
+  switch (answers.propertyCondition) {
+    case "ready":
+      score += 10;
+      factors.push({ label: "Propriété rénovée et prête à vendre", delta: 10, tone: "positive" });
+      break;
+    case "minor_reno":
+      score += 6;
+      factors.push({ label: "Quelques rénovations à prévoir", delta: 6, tone: "positive" });
+      break;
+    case "major_work":
+      score -= 8;
+      factors.push({ label: "Beaucoup de travaux à prévoir avant la vente", delta: -8, tone: "negative" });
+      break;
+    case "unsure":
+      factors.push({ label: "État à évaluer sur place", delta: 0, tone: "neutral" });
+      break;
+  }
+
+  // 5. Objectif principal
   switch (answers.salePreference) {
     case "highest_price":
       score += 8;

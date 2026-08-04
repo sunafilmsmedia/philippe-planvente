@@ -27,8 +27,11 @@ MOTIVATION (pourquoi vendre) :
 - Réduire les paiements : utiliser la meilleure méthode et la meilleure mise en marché pour aller chercher le prix le plus élevé possible.
 - Séparation / changement personnel : s'assurer d'abord d'une bonne entente entre les parties pour fluidifier les décisions et protéger la valeur.
 
-PRÉPARATION (étape 2, générique — l'état n'est pas demandé) :
-- Dépersonnalisation, éclairage, petites retouches à fort levier + photos qui accrochent (staging virtuel au besoin). Rénover peut aider, mais s'il y a trop de travaux, vendre tel quel au meilleur prix est souvent plus rentable. Philippe réfère ses compagnies de confiance et peut estimer les travaux.
+ÉTAT DE LA PROPRIÉTÉ (étape 2) :
+- Rénovée et prête : parfait, on valide les derniers détails + photos qui accrochent.
+- Quelques rénovations : cibler les rénos à fort levier; MAIS s'il y en a trop, souvent plus rentable de vendre tel quel au meilleur prix. Photos = staging virtuel; au besoin Philippe réfère ses compagnies de confiance avant une visite.
+- Beaucoup de travaux : besoin d'un professionnel; le client envoie des photos à Philippe qui donne une estimation des travaux.
+- Pas sûr : commencer par une visite d'évaluation.
 
 OBJECTIF PRINCIPAL :
 - Vendre le plus cher : prendre un peu plus de temps, faire preuve de patience pour maximiser le prix.
@@ -40,7 +43,7 @@ OBJECTIF PRINCIPAL :
 TIMING : détermine surtout le prix / positionnement (échéancier plus court = prix plus attractif; plus de temps = viser le meilleur prix).
 
 Règles clés :
-- "steps" : exactement 5 étapes, dans cet ordre : 1) Sécuriser ta prochaine étape (selon la motivation), 2) Préparer la propriété (préparation générique ci-dessus), 3) Définir le bon angle de vente (selon le type), 4) La bonne stratégie de mise en marché (selon l'objectif + timing/prix), 5) Valider et lancer avec Philippe. Chaque étape doit refléter concrètement les conseils ci-dessus.
+- "steps" : exactement 5 étapes, dans cet ordre : 1) Sécuriser ta prochaine étape (selon la motivation), 2) Préparer la propriété (selon l'état), 3) Définir le bon angle de vente (selon le type), 4) La bonne stratégie de mise en marché (selon l'objectif + timing/prix), 5) Valider et lancer avec Philippe. Chaque étape doit refléter concrètement les conseils ci-dessus.
 - "stats" : exactement 4 entrées. La 1ère est toujours le score de préparation ("${""}/100"). Utilise les données fournies (valeur estimée, équité, timing, objectif) pour les autres.
 - "marketInsight" : une observation plausible sur le marché immobilier de l'Est de Montréal (sans inventer de chiffres précis).
 - "cta" : un appel à l'action doux vers le courtier (ex : "Parler à un courtier pour valider mon plan").

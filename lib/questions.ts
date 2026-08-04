@@ -7,6 +7,7 @@ export type QuestionId =
   | "timing"
   | "estimatedValue"
   | "yearsOwned"
+  | "propertyCondition"
   | "salePreference"
   | "hasContract";
 
@@ -88,6 +89,19 @@ export const QUESTIONS: QuestionDef[] = [
     subtitle: "Ça nous aide à estimer ton équité (hypothèque remboursée + plus-value).",
   },
   {
+    id: "propertyCondition",
+    kind: "choice",
+    title: "Dans quel état est ta propriété actuellement ?",
+    subtitle: "Ça oriente les recommandations avant la mise en marché.",
+    autoAdvance: true,
+    choices: [
+      { value: "ready", label: "Rénovée et prête à vendre" },
+      { value: "minor_reno", label: "Quelques rénovations à faire" },
+      { value: "major_work", label: "Beaucoup de travaux à prévoir" },
+      { value: "unsure", label: "Je ne suis pas sûr" },
+    ],
+  },
+  {
     id: "salePreference",
     kind: "choice",
     title: "Qu'est-ce qui est le plus important pour toi ?",
@@ -122,6 +136,7 @@ export function isAnswered(q: QuestionDef, a: Answers): boolean {
     case "timing": return !!a.timing;
     case "estimatedValue": return typeof a.estimatedValue === "number" && a.estimatedValue > 0;
     case "yearsOwned": return typeof a.yearsOwned === "number" && a.yearsOwned >= 0;
+    case "propertyCondition": return !!a.propertyCondition;
     case "salePreference": return !!a.salePreference;
     case "hasContract":
       // "Non" = on peut continuer. "Oui" = bloqué SAUF si la personne

@@ -281,6 +281,14 @@ function QuestionRenderer({
           suffix="ans"
         />
       );
+    case "propertyCondition":
+      return (
+        <ChoiceQuestion
+          choices={choices!}
+          value={answers.propertyCondition}
+          onChange={(v) => onUpdate({ propertyCondition: v as Answers["propertyCondition"] }, autoAdvance)}
+        />
+      );
     case "salePreference":
       return (
         <ChoiceQuestion
