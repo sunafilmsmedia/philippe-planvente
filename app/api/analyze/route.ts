@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { computeScoring } from "@/lib/scoring";
 import { buildFallbackReport } from "@/lib/fallbackReport";
-import { avgPriceFor, growthFor } from "@/lib/marketData";
+import { avgPriceFor, growthFor, daysFor } from "@/lib/marketData";
 import { REGIONS } from "@/lib/regions";
 import type { AnalyzeResponse, Answers, Report } from "@/lib/types";
 
@@ -95,6 +95,7 @@ export async function POST(req: Request) {
   // deux chemins (IA ou fallback).
   const marketPrice = avgPriceFor(answers.region, answers.propertyType);
   const marketGrowth = growthFor(answers.region, answers.propertyType);
+  const marketDays = daysFor(answers.region, answers.propertyType);
   const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? "";
 
   // Estimation réaliste : réconcilie l'estimation du proprio avec la moyenne
@@ -125,6 +126,7 @@ export async function POST(req: Request) {
       generatedBy: "fallback",
       marketPrice,
       marketGrowth,
+      marketDays,
       regionName,
       ownerEstimate,
       realisticLow,
@@ -191,6 +193,7 @@ export async function POST(req: Request) {
         generatedBy: "claude",
         marketPrice,
         marketGrowth,
+        marketDays,
         regionName,
         ownerEstimate,
         realisticLow,
@@ -208,6 +211,7 @@ export async function POST(req: Request) {
     generatedBy: "fallback",
     marketPrice,
     marketGrowth,
+    marketDays,
     regionName,
     ownerEstimate,
     realisticLow,

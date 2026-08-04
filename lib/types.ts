@@ -107,6 +107,7 @@ export interface AnalyzeResponse {
   // Prix de vente moyen du secteur (2025) — null si non disponible.
   marketPrice?: number | null;
   marketGrowth?: string | null; // croissance depuis 2019, ex. "+72 %"
+  marketDays?: number | null; // moyenne de jours sur le marché
   regionName?: string;
   // Estimation réaliste (réconcilie l'estimation du proprio avec le marché).
   ownerEstimate?: number | null;

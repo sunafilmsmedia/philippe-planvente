@@ -1,21 +1,22 @@
 // ─────────────────────────────────────────────────────────────
-// Prix de vente moyen par secteur et par type (valeur = moyenne 2025,
-// dernière année complète ; growth = croissance depuis 2019).
-// Source : données fournies par Philippe (2019-2025).
+// Prix médians par secteur et par type. Source : stats APCIQ/Centris
+// (cumul des 4 derniers trimestres, T2 2026) fournies par Philippe.
+//   price  = prix médian (cumul 4 trimestres)
+//   growth = croissance depuis 2019
+//   days   = moyenne de jours sur le marché (cumul 4 trimestres)
 //
 // Regroupement des secteurs (données par zone) :
-//   Pointe Est de l'île → hochelaga, anjou, saint-leonard, montreal-nord,
-//                         rdp, montreal-est, pat
-//   Terrebonne          → terrebonne, lachenaie
-//   Mascouche           → mascouche
-//   Repentigny          → repentigny, charlemagne
-//
-// Terrain : pas de données → aucun prix affiché pour ce type.
+//   Île-Est (RDP / PAT / Mtl-Est + arrond. est) → hochelaga, anjou,
+//        saint-leonard, montreal-nord, rdp, montreal-est, pat
+//   Terrebonne (La Plaine) → terrebonne, lachenaie
+//   Mascouche              → mascouche
+//   Repentigny             → repentigny, charlemagne
 // ─────────────────────────────────────────────────────────────
 
 export interface TypeStat {
   price: number;
   growth?: string; // croissance depuis 2019, ex. "+72 %"
+  days?: number; // moyenne de jours sur le marché
 }
 
 export interface SectorMarket {
@@ -25,36 +26,36 @@ export interface SectorMarket {
   terrain?: TypeStat;
 }
 
-const POINTE_EST: SectorMarket = {
-  maison: { price: 560_000, growth: "+72 %" },
-  condo: { price: 345_000, growth: "+85 %" },
-  plex: { price: 759_000 },
+const ILE_EST: SectorMarket = {
+  maison: { price: 580_000, growth: "+72 %", days: 35 },
+  condo: { price: 351_000, growth: "+85 %", days: 39 },
+  plex: { price: 783_000, days: 47 },
 };
 const TERREBONNE: SectorMarket = {
-  maison: { price: 570_000, growth: "+102 %" },
-  condo: { price: 365_000, growth: "+83 %" },
+  maison: { price: 515_000, growth: "+102 %", days: 26 },
+  condo: { price: 333_000, growth: "+83 %", days: 31 },
   plex: { price: 730_000 },
 };
 const MASCOUCHE: SectorMarket = {
-  maison: { price: 580_000, growth: "+97 %" },
-  condo: { price: 350_000, growth: "+79 %" },
-  plex: { price: 820_000 },
+  maison: { price: 606_000, growth: "+97 %", days: 25 },
+  condo: { price: 359_000, growth: "+79 %", days: 31 },
+  plex: { price: 808_000, days: 52 },
 };
 const REPENTIGNY: SectorMarket = {
-  maison: { price: 570_000, growth: "+96 %" },
-  condo: { price: 348_000, growth: "+90 %" },
+  maison: { price: 596_000, growth: "+96 %", days: 25 },
+  condo: { price: 352_000, growth: "+90 %", days: 41 },
   plex: { price: 700_000 },
 };
 
 export const MARKET_DATA: Record<string, SectorMarket> = {
-  // Pointe Est de l'île
-  hochelaga: POINTE_EST,
-  anjou: POINTE_EST,
-  "saint-leonard": POINTE_EST,
-  "montreal-nord": POINTE_EST,
-  rdp: POINTE_EST,
-  "montreal-est": POINTE_EST,
-  pat: POINTE_EST,
+  // Île-Est
+  hochelaga: ILE_EST,
+  anjou: ILE_EST,
+  "saint-leonard": ILE_EST,
+  "montreal-nord": ILE_EST,
+  rdp: ILE_EST,
+  "montreal-est": ILE_EST,
+  pat: ILE_EST,
   // Couronne nord-est
   terrebonne: TERREBONNE,
   lachenaie: TERREBONNE,
@@ -70,7 +71,7 @@ function statFor(regionId?: string, propertyType?: string): TypeStat | null {
   return m[propertyType as keyof SectorMarket] ?? null;
 }
 
-// Prix moyen pour un secteur + type (null si inconnu).
+// Prix médian pour un secteur + type (null si inconnu).
 export function avgPriceFor(regionId?: string, propertyType?: string): number | null {
   const s = statFor(regionId, propertyType);
   return s && s.price > 0 ? s.price : null;
@@ -79,4 +80,9 @@ export function avgPriceFor(regionId?: string, propertyType?: string): number | 
 // Croissance depuis 2019 pour un secteur + type (null si inconnu).
 export function growthFor(regionId?: string, propertyType?: string): string | null {
   return statFor(regionId, propertyType)?.growth ?? null;
+}
+
+// Moyenne de jours sur le marché pour un secteur + type (null si inconnu).
+export function daysFor(regionId?: string, propertyType?: string): number | null {
+  return statFor(regionId, propertyType)?.days ?? null;
 }

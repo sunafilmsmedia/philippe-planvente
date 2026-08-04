@@ -172,11 +172,14 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
                 )}
                 {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 && (
                   <span>
-                    Moyenne du secteur : {formatCurrency(analyze.marketPrice)}
+                    Médiane du secteur : {formatCurrency(analyze.marketPrice)}
                     {analyze.marketGrowth ? (
                       <span className="text-emerald-700 font-semibold"> ▲ {analyze.marketGrowth} depuis 2019</span>
                     ) : null}
                   </span>
+                )}
+                {typeof analyze.marketDays === "number" && analyze.marketDays > 0 && (
+                  <span>Se vend en ~{analyze.marketDays} jours en moyenne</span>
                 )}
               </div>
               <p className="text-[11px] text-[var(--color-muted-2)] mt-3">
