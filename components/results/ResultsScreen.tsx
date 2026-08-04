@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { BROKER } from "@/lib/broker";
+import { formatCurrency } from "@/lib/format";
 import type { AnalyzeResponse, Answers, Verdict } from "@/lib/types";
 import ContactForm from "./ContactForm";
 
@@ -141,6 +142,26 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
         <ScoreOnlyCta verdict={scoring.verdict} onRestart={onRestart} generatedBy={analyze.generatedBy} />
       ) : (
         <>
+          {/* Prix de vente moyen du secteur (moyenne 6 ans) */}
+          {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="mt-6 rounded-3xl p-6 sm:p-7 text-center bg-gradient-to-br from-[var(--color-gold)]/12 to-transparent border border-[var(--color-gold)]/35"
+            >
+              <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-gold-soft)]">
+                Prix de vente moyen{analyze.regionName ? ` — ${analyze.regionName}` : ""}
+              </p>
+              <p className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] mt-2">
+                {formatCurrency(analyze.marketPrice)}
+              </p>
+              <p className="text-xs text-[var(--color-muted)] mt-2">
+                Moyenne des 6 dernières années · à titre indicatif
+              </p>
+            </motion.div>
+          )}
+
           {/* Confirmation après soumission gated */}
           {submission.kind === "done" && (
             <ConfirmationBlock

@@ -123,6 +123,9 @@ export interface AnalyzeResponse {
   scoring: ScoringResult;
   report: Report;
   generatedBy: "claude" | "fallback";
+  // Prix de vente moyen du secteur (moyenne 6 ans) — null si non disponible.
+  marketPrice?: number | null;
+  regionName?: string;
 }
 
 // selling_plan : lead qualifié qui a demandé son plan complet.
