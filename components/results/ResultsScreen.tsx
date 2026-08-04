@@ -150,8 +150,8 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
         <ScoreOnlyCta verdict={scoring.verdict} onRestart={onRestart} generatedBy={analyze.generatedBy} />
       ) : (
         <>
-          {/* Prix de vente moyen du secteur (2025) */}
-          {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 && (
+          {/* Estimation réaliste (estimation du proprio réconciliée au marché) */}
+          {typeof analyze.realisticLow === "number" && typeof analyze.realisticHigh === "number" && (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -159,22 +159,28 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
               className="mt-6 rounded-3xl p-6 sm:p-7 text-center bg-gradient-to-br from-[var(--color-gold)]/12 to-transparent border border-[var(--color-gold)]/35"
             >
               <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-gold-soft)]">
-                Prix de vente moyen
+                Estimation réaliste
                 {answers.propertyType ? ` · ${PROPERTY_LABEL[answers.propertyType]}` : ""}
                 {analyze.regionName ? ` — ${analyze.regionName}` : ""}
               </p>
-              <div className="mt-2 flex items-baseline justify-center gap-3 flex-wrap">
-                <p className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)]">
-                  {formatCurrency(analyze.marketPrice)}
-                </p>
-                {analyze.marketGrowth && (
-                  <span className="text-sm font-semibold text-emerald-700">
-                    ▲ {analyze.marketGrowth} depuis 2019
+              <p className="font-serif text-3xl sm:text-4xl text-[var(--color-brand-100)] mt-2">
+                {formatCurrency(analyze.realisticLow)} – {formatCurrency(analyze.realisticHigh)}
+              </p>
+              <div className="mt-3 flex items-center justify-center gap-x-4 gap-y-1 flex-wrap text-xs text-[var(--color-muted)]">
+                {typeof analyze.ownerEstimate === "number" && analyze.ownerEstimate > 0 && (
+                  <span>Ton estimation : {formatCurrency(analyze.ownerEstimate)}</span>
+                )}
+                {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 && (
+                  <span>
+                    Moyenne du secteur : {formatCurrency(analyze.marketPrice)}
+                    {analyze.marketGrowth ? (
+                      <span className="text-emerald-700 font-semibold"> ▲ {analyze.marketGrowth} depuis 2019</span>
+                    ) : null}
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[var(--color-muted)] mt-2">
-                Moyenne 2025 · à titre indicatif
+              <p className="text-[11px] text-[var(--color-muted-2)] mt-3">
+                Fourchette indicative — à confirmer avec Philippe pour un prix précis.
               </p>
             </motion.div>
           )}

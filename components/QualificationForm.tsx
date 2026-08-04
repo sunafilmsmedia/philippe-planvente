@@ -2,11 +2,13 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { getVisibleQuestions, isAnswered, VALUE_BRACKET_MID } from "@/lib/questions";
-import type { Answers, ValueBracket } from "@/lib/types";
+import { getVisibleQuestions, isAnswered } from "@/lib/questions";
+import type { Answers } from "@/lib/types";
 import ProgressBar from "./ProgressBar";
 import ChoiceQuestion from "./questions/ChoiceQuestion";
 import BooleanQuestion from "./questions/BooleanQuestion";
+import CurrencyQuestion from "./questions/CurrencyQuestion";
+import NumberQuestion from "./questions/NumberQuestion";
 import RegionMap from "./questions/RegionMap";
 import ExistingBrokerBlocker from "./questions/ExistingBrokerBlocker";
 
@@ -263,34 +265,20 @@ function QuestionRenderer({
       );
     case "estimatedValue":
       return (
-        <ChoiceQuestion
-          choices={choices!}
-          value={answers.valueBracket}
-          onChange={(v) =>
-            onUpdate(
-              {
-                valueBracket: v as Answers["valueBracket"],
-                estimatedValue: VALUE_BRACKET_MID[v as ValueBracket],
-              },
-              autoAdvance
-            )
-          }
+        <CurrencyQuestion
+          value={answers.estimatedValue}
+          onChange={(v) => onUpdate({ estimatedValue: v }, false)}
+          helper="Ton meilleur estimé — on le compare aux ventes réelles du secteur."
         />
       );
     case "yearsOwned":
       return (
-        <ChoiceQuestion
-          choices={choices!}
+        <NumberQuestion
           value={answers.yearsOwned}
-          onChange={(v) => onUpdate({ yearsOwned: v as Answers["yearsOwned"] }, autoAdvance)}
-        />
-      );
-    case "propertyCondition":
-      return (
-        <ChoiceQuestion
-          choices={choices!}
-          value={answers.propertyCondition}
-          onChange={(v) => onUpdate({ propertyCondition: v as Answers["propertyCondition"] }, autoAdvance)}
+          onChange={(v) => onUpdate({ yearsOwned: v }, false)}
+          min={0}
+          max={60}
+          suffix="ans"
         />
       );
     case "salePreference":

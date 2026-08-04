@@ -6,9 +6,23 @@ interface HeroProps {
   onStart: () => void;
 }
 
+const ZONES = ["Pointe-aux-Trembles", "Mascouche", "Terrebonne", "Repentigny"];
+
 export default function Hero({ onStart }: HeroProps) {
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-start px-5 sm:px-8 pt-20 sm:pt-28 pb-32">
+    <section
+      onClick={onStart}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onStart();
+        }
+      }}
+      aria-label="Voir mon secteur"
+      className="relative min-h-screen flex flex-col items-center justify-start px-5 sm:px-8 pt-20 sm:pt-28 pb-32 cursor-pointer"
+    >
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -23,6 +37,18 @@ export default function Hero({ onStart }: HeroProps) {
             Mis à jour · 2026
           </span>
         </h1>
+
+        {/* Zones desservies */}
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+          {ZONES.map((z) => (
+            <span
+              key={z}
+              className="px-3 py-1 rounded-full text-xs font-medium text-[var(--color-brand-200)] bg-white/70 border border-black/5 shadow-[0_2px_8px_-4px_rgba(74,22,17,0.18)]"
+            >
+              {z}
+            </span>
+          ))}
+        </div>
 
         {/* Badge Propulsé par l'IA — rainbow bleu/blanc/rouge */}
         <motion.div
@@ -64,7 +90,7 @@ export default function Hero({ onStart }: HeroProps) {
               active:translate-y-0
             "
           >
-            <span>Obtenir mon plan</span>
+            <span>Voir mon secteur</span>
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
             </svg>

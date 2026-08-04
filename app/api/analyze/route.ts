@@ -27,11 +27,8 @@ MOTIVATION (pourquoi vendre) :
 - Réduire les paiements : utiliser la meilleure méthode et la meilleure mise en marché pour aller chercher le prix le plus élevé possible.
 - Séparation / changement personnel : s'assurer d'abord d'une bonne entente entre les parties pour fluidifier les décisions et protéger la valeur.
 
-ÉTAT DE LA PROPRIÉTÉ :
-- Prête : parfait, on valide les derniers détails.
-- Rénovations mineures : cibler les rénos à fort levier; MAIS s'il y en a trop, souvent plus rentable de vendre tel quel au meilleur prix. Photos = staging virtuel; au besoin Philippe réfère ses compagnies de confiance avant une visite.
-- Home staging : staging virtuel pour les photos + compagnies partenaires de Philippe avant les visites.
-- Beaucoup de travaux : besoin d'un professionnel; le client envoie des photos à Philippe qui donne une estimation des travaux.
+PRÉPARATION (étape 2, générique — l'état n'est pas demandé) :
+- Dépersonnalisation, éclairage, petites retouches à fort levier + photos qui accrochent (staging virtuel au besoin). Rénover peut aider, mais s'il y a trop de travaux, vendre tel quel au meilleur prix est souvent plus rentable. Philippe réfère ses compagnies de confiance et peut estimer les travaux.
 
 OBJECTIF PRINCIPAL :
 - Vendre le plus cher : prendre un peu plus de temps, faire preuve de patience pour maximiser le prix.
@@ -43,7 +40,7 @@ OBJECTIF PRINCIPAL :
 TIMING : détermine surtout le prix / positionnement (échéancier plus court = prix plus attractif; plus de temps = viser le meilleur prix).
 
 Règles clés :
-- "steps" : exactement 5 étapes, dans cet ordre : 1) Sécuriser ta prochaine étape (selon la motivation), 2) Préparer la propriété (selon l'état), 3) Définir le bon angle de vente (selon le type), 4) La bonne stratégie de mise en marché (selon l'objectif + timing/prix), 5) Valider et lancer avec Philippe. Chaque étape doit refléter concrètement les conseils ci-dessus.
+- "steps" : exactement 5 étapes, dans cet ordre : 1) Sécuriser ta prochaine étape (selon la motivation), 2) Préparer la propriété (préparation générique ci-dessus), 3) Définir le bon angle de vente (selon le type), 4) La bonne stratégie de mise en marché (selon l'objectif + timing/prix), 5) Valider et lancer avec Philippe. Chaque étape doit refléter concrètement les conseils ci-dessus.
 - "stats" : exactement 4 entrées. La 1ère est toujours le score de préparation ("${""}/100"). Utilise les données fournies (valeur estimée, équité, timing, objectif) pour les autres.
 - "marketInsight" : une observation plausible sur le marché immobilier de l'Est de Montréal (sans inventer de chiffres précis).
 - "cta" : un appel à l'action doux vers le courtier (ex : "Parler à un courtier pour valider mon plan").
@@ -97,6 +94,26 @@ export async function POST(req: Request) {
   const marketGrowth = growthFor(answers.region, answers.propertyType);
   const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? "";
 
+  // Estimation réaliste : réconcilie l'estimation du proprio avec la moyenne
+  // réelle du secteur (ni gonflée, ni sous-évaluée). Fourchette indicative.
+  const ownerEstimate =
+    typeof answers.estimatedValue === "number" && answers.estimatedValue > 0
+      ? answers.estimatedValue
+      : null;
+  let realisticLow: number | null = null;
+  let realisticHigh: number | null = null;
+  {
+    const roundTo = (n: number, step: number) => Math.round(n / step) * step;
+    let mid: number | null = null;
+    if (ownerEstimate && marketPrice) mid = (ownerEstimate + marketPrice) / 2;
+    else if (ownerEstimate) mid = ownerEstimate;
+    else if (marketPrice) mid = marketPrice;
+    if (mid) {
+      realisticLow = roundTo(mid * 0.97, 1000);
+      realisticHigh = roundTo(mid * 1.03, 1000);
+    }
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     const payload: AnalyzeResponse = {
@@ -106,6 +123,9 @@ export async function POST(req: Request) {
       marketPrice,
       marketGrowth,
       regionName,
+      ownerEstimate,
+      realisticLow,
+      realisticHigh,
     };
     return NextResponse.json(payload);
   }
@@ -169,6 +189,9 @@ export async function POST(req: Request) {
         marketPrice,
         marketGrowth,
         regionName,
+        ownerEstimate,
+        realisticLow,
+        realisticHigh,
       };
       return NextResponse.json(payload);
     }
@@ -183,6 +206,9 @@ export async function POST(req: Request) {
     marketPrice,
     marketGrowth,
     regionName,
+    ownerEstimate,
+    realisticLow,
+    realisticHigh,
   };
   return NextResponse.json(payload);
 }

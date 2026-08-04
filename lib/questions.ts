@@ -1,39 +1,16 @@
-import type { Answers, ValueBracket } from "./types";
-
-// Point milieu de chaque tranche de valeur (0 = "Autre"/inconnu) — utilisé
-// pour le calcul d'équité et le CRM.
-export const VALUE_BRACKET_MID: Record<ValueBracket, number> = {
-  "300_400": 350_000,
-  "400_500": 450_000,
-  "500_600": 550_000,
-  "600_700": 650_000,
-  "700_800": 750_000,
-  "800_900": 850_000,
-  autre: 0,
-};
-
-export const VALUE_BRACKET_LABEL: Record<ValueBracket, string> = {
-  "300_400": "300 000 $ – 400 000 $",
-  "400_500": "400 000 $ – 500 000 $",
-  "500_600": "500 000 $ – 600 000 $",
-  "600_700": "600 000 $ – 700 000 $",
-  "700_800": "700 000 $ – 800 000 $",
-  "800_900": "800 000 $ – 900 000 $",
-  autre: "Autre",
-};
+import type { Answers } from "./types";
 
 export type QuestionId =
+  | "region"
   | "propertyType"
   | "sellingMotivation"
   | "timing"
   | "estimatedValue"
   | "yearsOwned"
-  | "propertyCondition"
   | "salePreference"
-  | "hasContract"
-  | "region";
+  | "hasContract";
 
-export type QuestionKind = "choice" | "currency" | "boolean" | "region";
+export type QuestionKind = "choice" | "currency" | "number" | "boolean" | "region";
 
 export interface Choice<V extends string = string> {
   value: V;
@@ -52,6 +29,12 @@ export interface QuestionDef {
 }
 
 export const QUESTIONS: QuestionDef[] = [
+  {
+    id: "region",
+    kind: "region",
+    title: "Dans quel secteur se trouve ta propriété ?",
+    subtitle: "Touche la carte près de chez toi — on sélectionne le secteur le plus proche.",
+  },
   {
     id: "propertyType",
     kind: "choice",
@@ -94,46 +77,15 @@ export const QUESTIONS: QuestionDef[] = [
   },
   {
     id: "estimatedValue",
-    kind: "choice",
+    kind: "currency",
     title: "Combien penses-tu que ta propriété vaut aujourd'hui ?",
-    subtitle: "Ton estimation à toi — une tranche suffit.",
-    autoAdvance: true,
-    choices: [
-      { value: "300_400", label: "300 000 $ – 400 000 $" },
-      { value: "400_500", label: "400 000 $ – 500 000 $" },
-      { value: "500_600", label: "500 000 $ – 600 000 $" },
-      { value: "600_700", label: "600 000 $ – 700 000 $" },
-      { value: "700_800", label: "700 000 $ – 800 000 $" },
-      { value: "800_900", label: "800 000 $ – 900 000 $" },
-      { value: "autre", label: "Autre" },
-    ],
+    subtitle: "Ton estimation à toi — le montant le plus précis possible.",
   },
   {
     id: "yearsOwned",
-    kind: "choice",
-    title: "Depuis combien de temps es-tu propriétaire ?",
+    kind: "number",
+    title: "Depuis combien d'années es-tu propriétaire ?",
     subtitle: "Ça nous aide à estimer ton équité (hypothèque remboursée + plus-value).",
-    autoAdvance: true,
-    choices: [
-      { value: "0_2", label: "Moins de 3 ans" },
-      { value: "3_7", label: "3 à 7 ans" },
-      { value: "8_14", label: "8 à 14 ans" },
-      { value: "15_plus", label: "15 ans ou plus" },
-    ],
-  },
-  {
-    id: "propertyCondition",
-    kind: "choice",
-    title: "Dans quel état est ta propriété actuellement ?",
-    subtitle: "Ça détermine les recommandations avant mise en marché.",
-    autoAdvance: true,
-    choices: [
-      { value: "ready", label: "Prête à vendre" },
-      { value: "minor_reno", label: "Quelques rénovations mineures à faire" },
-      { value: "staging", label: "Besoin de home staging / préparation" },
-      { value: "major_work", label: "Beaucoup de travaux à prévoir" },
-      { value: "unsure", label: "Je ne suis pas sûr" },
-    ],
   },
   {
     id: "salePreference",
@@ -156,12 +108,6 @@ export const QUESTIONS: QuestionDef[] = [
     subtitle: "Question légale — on ne peut pas évaluer une propriété déjà sous contrat.",
     autoAdvance: true,
   },
-  {
-    id: "region",
-    kind: "region",
-    title: "Dans quel secteur se trouve ta propriété ?",
-    subtitle: "Touche la carte près de chez toi — on sélectionne le secteur le plus proche.",
-  },
 ];
 
 export function getVisibleQuestions(answers: Answers): QuestionDef[] {
@@ -170,12 +116,12 @@ export function getVisibleQuestions(answers: Answers): QuestionDef[] {
 
 export function isAnswered(q: QuestionDef, a: Answers): boolean {
   switch (q.id) {
+    case "region": return !!a.region;
     case "propertyType": return !!a.propertyType;
     case "sellingMotivation": return !!a.sellingMotivation;
     case "timing": return !!a.timing;
-    case "estimatedValue": return !!a.valueBracket;
-    case "yearsOwned": return !!a.yearsOwned;
-    case "propertyCondition": return !!a.propertyCondition;
+    case "estimatedValue": return typeof a.estimatedValue === "number" && a.estimatedValue > 0;
+    case "yearsOwned": return typeof a.yearsOwned === "number" && a.yearsOwned >= 0;
     case "salePreference": return !!a.salePreference;
     case "hasContract":
       // "Non" = on peut continuer. "Oui" = bloqué SAUF si la personne
@@ -183,6 +129,5 @@ export function isAnswered(q: QuestionDef, a: Answers): boolean {
       if (a.hasContract === false) return true;
       if (a.hasContract === true && a.wantsToSwitch === true) return true;
       return false;
-    case "region": return !!a.region;
   }
 }

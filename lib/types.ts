@@ -21,35 +21,12 @@ export type SellingTiming =
   | "6_12" // 6 à 12 mois
   | "unsure"; // Je ne sais pas encore
 
-// Années de possession (proxy d'équité : amortissement ~25 ans + plus-value).
-export type YearsOwned =
-  | "0_2" // Moins de 3 ans
-  | "3_7" // 3 à 7 ans
-  | "8_14" // 8 à 14 ans
-  | "15_plus"; // 15 ans ou plus
-
-export type PropertyCondition =
-  | "ready" // Prête à vendre
-  | "minor_reno" // Quelques rénovations mineures
-  | "staging" // Besoin de home staging / préparation
-  | "major_work" // Beaucoup de travaux à prévoir
-  | "unsure"; // Je ne suis pas sûr
-
 export type SalePreference =
   | "highest_price" // Vendre le plus cher possible
   | "fast" // Vendre rapidement
   | "no_stress" // Vendre sans stress
   | "clear_strategy" // Avoir une stratégie claire
   | "compare_options"; // Comparer mes options
-
-export type ValueBracket =
-  | "300_400"
-  | "400_500"
-  | "500_600"
-  | "600_700"
-  | "700_800"
-  | "800_900"
-  | "autre";
 
 export type Region = {
   id: string;
@@ -62,12 +39,9 @@ export interface Answers {
   propertyType?: PropertyType;
   sellingMotivation?: SellingMotivation;
   timing?: SellingTiming;
-  // Tranche de valeur choisie + valeur numérique dérivée (point milieu de la
-  // tranche) utilisée pour le calcul d'équité et le CRM.
-  valueBracket?: ValueBracket;
+  // Saisie manuelle (précis) : estimation du propriétaire + années de possession.
   estimatedValue?: number;
-  yearsOwned?: YearsOwned;
-  propertyCondition?: PropertyCondition;
+  yearsOwned?: number;
   salePreference?: SalePreference;
   // hasContract = true bloque le formulaire (déjà sous contrat de courtage
   // avec un autre courtier — restriction légale au Québec).
@@ -127,6 +101,10 @@ export interface AnalyzeResponse {
   marketPrice?: number | null;
   marketGrowth?: string | null; // croissance depuis 2019, ex. "+72 %"
   regionName?: string;
+  // Estimation réaliste (réconcilie l'estimation du proprio avec le marché).
+  ownerEstimate?: number | null;
+  realisticLow?: number | null;
+  realisticHigh?: number | null;
 }
 
 // selling_plan : lead qualifié qui a demandé son plan complet.

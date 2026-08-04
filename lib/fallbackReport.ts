@@ -1,6 +1,5 @@
 import type {
   Answers,
-  PropertyCondition,
   PropertyType,
   Report,
   ReportStep,
@@ -9,7 +8,7 @@ import type {
   ScoringResult,
   Verdict,
 } from "./types";
-import { VALUE_BRACKET_LABEL } from "./questions";
+import { formatCurrency } from "./format";
 
 const VERDICT_HEADLINE: Record<Verdict, string> = {
   offensif: "Tu es dans une excellente position pour vendre",
@@ -96,33 +95,11 @@ function motivationStep(m: SellingMotivation | undefined): ReportStep {
   }
 }
 
-// Étape 2 — Préparer la propriété (selon l'ÉTAT déclaré)
-const PREP_STEP: Record<PropertyCondition, ReportStep> = {
-  ready: {
-    title: "Étape 2 — Préparer la propriété",
-    description:
-      "Ta propriété est déjà prête — c'est parfait. On valide les derniers détails (dépersonnalisation, éclairage, petites retouches) pour la présenter à son plein potentiel dès le lancement.",
-  },
-  minor_reno: {
-    title: "Étape 2 — Préparer la propriété",
-    description:
-      "On cible les rénovations à fort levier. Rénover avant de vendre est une bonne idée — mais s'il y en a trop, il est souvent plus rentable de vendre tel quel au meilleur prix possible. Pour les photos, on fait du staging virtuel; au besoin, Philippe te réfère ses compagnies de confiance avant une visite.",
-  },
-  staging: {
-    title: "Étape 2 — Préparer la propriété",
-    description:
-      "On mise sur le home staging pour transformer la perception des acheteurs : staging virtuel pour des photos qui accrochent, puis mise en valeur avec les compagnies partenaires de Philippe avant les visites.",
-  },
-  major_work: {
-    title: "Étape 2 — Préparer la propriété",
-    description:
-      "Il y a des travaux importants : tu as besoin d'un regard professionnel. Envoie tes photos à Philippe — il peut te donner une estimation des travaux et t'aider à décider quoi faire vs vendre tel quel.",
-  },
-  unsure: {
-    title: "Étape 2 — Préparer la propriété",
-    description:
-      "On commence par une visite d'évaluation pour établir exactement quoi préparer avant la mise en marché — sans dépenser inutilement.",
-  },
+// Étape 2 — Préparer la propriété (générique — l'état est évalué avec Philippe)
+const PREP_STEP: ReportStep = {
+  title: "Étape 2 — Préparer la propriété",
+  description:
+    "On prépare ta propriété pour qu'elle se démarque : dépersonnalisation, éclairage et petites retouches à fort levier, puis des photos qui accrochent (staging virtuel au besoin). Rénover peut aider, mais s'il y a trop de travaux, vendre tel quel au meilleur prix est souvent plus rentable — Philippe peut te référer ses compagnies de confiance et estimer les travaux avant la mise en marché.",
 };
 
 // Étape 3 — Définir le bon angle de vente (selon le TYPE de propriété)
@@ -216,7 +193,6 @@ function validateStep(timing: Answers["timing"]): ReportStep {
 
 export function buildFallbackReport(answers: Answers, scoring: ScoringResult): Report {
   const { score, verdict, metrics } = scoring;
-  const condition = answers.propertyCondition ?? "unsure";
   const propertyType = answers.propertyType ?? "autre";
 
   const marketInsightByVerdict: Record<Verdict, string> = {
@@ -240,9 +216,9 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
           : "À consolider avant de vendre.",
     },
     {
-      label: "Valeur estimée",
-      value: answers.valueBracket ? VALUE_BRACKET_LABEL[answers.valueBracket] : "—",
-      detail: "Selon la tranche que tu as indiquée.",
+      label: "Ton estimation",
+      value: metrics.estimatedValue ? formatCurrency(metrics.estimatedValue) : "—",
+      detail: "Comparée aux ventes réelles du secteur.",
     },
     {
       label: "Équité",
@@ -258,7 +234,7 @@ export function buildFallbackReport(answers: Answers, scoring: ScoringResult): R
 
   const steps: ReportStep[] = [
     motivationStep(answers.sellingMotivation),
-    PREP_STEP[condition],
+    PREP_STEP,
     ANGLE_STEP[propertyType],
     marketingStep(answers.salePreference),
     validateStep(answers.timing),

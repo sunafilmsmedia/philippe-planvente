@@ -25,50 +25,52 @@ function scoreEquity(answers: Answers): {
   factor: ScoringFactor | null;
   equityLabel: string;
 } {
-  switch (answers.yearsOwned) {
-    case "15_plus":
-      return {
-        delta: 12,
-        factor: {
-          label: "Équité élevée — hypothèque bien remboursée et forte plus-value (15+ ans)",
-          delta: 12,
-          tone: "positive",
-        },
-        equityLabel: "Équité élevée",
-      };
-    case "8_14":
-      return {
-        delta: 6,
-        factor: {
-          label: "Équité correcte — environ la moitié remboursée + plus-value (8 à 14 ans)",
-          delta: 6,
-          tone: "positive",
-        },
-        equityLabel: "Équité correcte",
-      };
-    case "3_7":
-      return {
-        delta: 2,
-        factor: {
-          label: "Équité en construction (3 à 7 ans de possession)",
-          delta: 2,
-          tone: "neutral",
-        },
-        equityLabel: "Équité en construction",
-      };
-    case "0_2":
-      return {
-        delta: -3,
-        factor: {
-          label: "Équité limitée — achat récent, peu de capital remboursé (moins de 3 ans)",
-          delta: -3,
-          tone: "negative",
-        },
-        equityLabel: "Équité limitée",
-      };
-    default:
-      return { delta: 0, factor: null, equityLabel: "À confirmer" };
+  const years = answers.yearsOwned;
+  if (typeof years !== "number") {
+    return { delta: 0, factor: null, equityLabel: "À confirmer" };
   }
+  if (years >= 15) {
+    return {
+      delta: 12,
+      factor: {
+        label: `Équité élevée — hypothèque bien remboursée et forte plus-value (${years} ans)`,
+        delta: 12,
+        tone: "positive",
+      },
+      equityLabel: "Équité élevée",
+    };
+  }
+  if (years >= 8) {
+    return {
+      delta: 6,
+      factor: {
+        label: `Équité correcte — environ la moitié remboursée + plus-value (${years} ans)`,
+        delta: 6,
+        tone: "positive",
+      },
+      equityLabel: "Équité correcte",
+    };
+  }
+  if (years >= 3) {
+    return {
+      delta: 2,
+      factor: {
+        label: `Équité en construction (${years} ans de possession)`,
+        delta: 2,
+        tone: "neutral",
+      },
+      equityLabel: "Équité en construction",
+    };
+  }
+  return {
+    delta: -3,
+    factor: {
+      label: `Équité limitée — achat récent, peu de capital remboursé (${years} an${years > 1 ? "s" : ""})`,
+      delta: -3,
+      tone: "negative",
+    },
+    equityLabel: "Équité limitée",
+  };
 }
 
 export function computeScoring(answers: Answers): ScoringResult {
@@ -124,35 +126,12 @@ export function computeScoring(answers: Answers): ScoringResult {
     // "no_sell" est court-circuité avant le scoring — n'arrive pas ici.
   }
 
-  // 3. Équité approximative (hypothèque vs valeur)
+  // 3. Équité estimée (années de possession)
   const equity = scoreEquity(answers);
   score += equity.delta;
   if (equity.factor) factors.push(equity.factor);
 
-  // 4. État de la propriété
-  switch (answers.propertyCondition) {
-    case "ready":
-      score += 10;
-      factors.push({ label: "Propriété prête à vendre", delta: 10, tone: "positive" });
-      break;
-    case "minor_reno":
-      score += 6;
-      factors.push({ label: "Quelques rénovations mineures à prévoir", delta: 6, tone: "positive" });
-      break;
-    case "staging":
-      score += 3;
-      factors.push({ label: "Home staging recommandé avant mise en marché", delta: 3, tone: "neutral" });
-      break;
-    case "major_work":
-      score -= 8;
-      factors.push({ label: "Beaucoup de travaux à prévoir avant la vente", delta: -8, tone: "negative" });
-      break;
-    case "unsure":
-      factors.push({ label: "État à évaluer sur place", delta: 0, tone: "neutral" });
-      break;
-  }
-
-  // 5. Objectif principal
+  // 4. Objectif principal
   switch (answers.salePreference) {
     case "highest_price":
       score += 8;
