@@ -9,7 +9,7 @@ import ChoiceQuestion from "./questions/ChoiceQuestion";
 import BooleanQuestion from "./questions/BooleanQuestion";
 import CurrencyQuestion from "./questions/CurrencyQuestion";
 import NumberQuestion from "./questions/NumberQuestion";
-import RegionMap from "./questions/RegionMap";
+import RegionInput from "./questions/RegionInput";
 import ExistingBrokerBlocker from "./questions/ExistingBrokerBlocker";
 
 interface Props {
@@ -316,7 +316,7 @@ function QuestionRenderer({
       );
     case "region":
       return (
-        <RegionMap
+        <RegionInput
           value={answers.region}
           onChange={(id) => onUpdate({ region: id }, true, 1100)}
         />
