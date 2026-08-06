@@ -32,7 +32,7 @@ export default function Hero({ onStart }: HeroProps) {
         {/* Titre H1 */}
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-[var(--color-brand-100)] leading-[1.05] tracking-tight text-balance">
           Découvre le prix de vente moyen dans{" "}
-          <span className="text-[var(--color-brand-500)]">l&apos;Est de Montréal</span>
+          <span className="text-[var(--color-brand-500)]">l&apos;Est de Montréal et ses environs</span>
           <span className="block mt-3 text-base sm:text-lg font-sans font-medium tracking-normal text-[var(--color-muted-2)]">
             Mis à jour · 2026
           </span>

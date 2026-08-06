@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { computeScoring } from "@/lib/scoring";
-import { REGIONS } from "@/lib/regions";
+import { sectorName } from "@/lib/marketData";
 import type { Answers, LeadPayload, LeadType, Verdict } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   }
 
   const { firstName, lastName } = splitName(name);
-  const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? "";
+  const regionName = sectorName(answers.region);
 
   // Payload aplati pour mapping GHL direct + données brutes en complément.
   const payload = {

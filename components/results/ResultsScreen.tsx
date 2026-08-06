@@ -82,11 +82,15 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           </div>
 
           <p className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-brand-300)] mb-3">
-            Plan de vente prêt
+            Estimation + plan prêts
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] leading-[1.1] tracking-tight text-balance">
-            Ton plan de vente est prêt.
+            Ton estimation de prix est prête.
           </h1>
+          <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-md mx-auto">
+            L&apos;estimation de prix de ta propriété est prête, ainsi qu&apos;un plan de
+            vente personnalisé selon ta situation.
+          </p>
         </motion.div>
 
         <div className="mt-10">

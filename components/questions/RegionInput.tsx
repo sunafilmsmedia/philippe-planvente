@@ -1,22 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { REGIONS } from "@/lib/regions";
+import { SECTORS, sectorName } from "@/lib/marketData";
 
 interface Props {
   value?: string;
   onChange: (id: string) => void;
 }
-
-// Termes de recherche additionnels (abréviations, secteurs voisins) par id.
-const ALIASES: Record<string, string[]> = {
-  rdp: ["rdp", "riviere des prairies"],
-  pat: ["pat", "pointe aux trembles"],
-  repentigny: ["le gardeur", "gardeur"],
-  terrebonne: ["la plaine"],
-  "saint-leonard": ["st leonard"],
-  hochelaga: ["maisonneuve", "hochelaga maisonneuve"],
-};
 
 function normalize(s: string): string {
   return s
@@ -29,14 +19,14 @@ function normalize(s: string): string {
 }
 
 export default function RegionInput({ value, onChange }: Props) {
-  const selectedName = value ? REGIONS.find((r) => r.id === value)?.name ?? "" : "";
+  const selectedName = value ? sectorName(value) : "";
   const [query, setQuery] = useState(selectedName);
 
   const matches = useMemo(() => {
     const q = normalize(query);
-    if (!q) return REGIONS;
-    return REGIONS.filter((r) => {
-      const hay = [normalize(r.name), ...(ALIASES[r.id] ?? []).map(normalize)];
+    if (!q) return SECTORS;
+    return SECTORS.filter((s) => {
+      const hay = [normalize(s.name), ...(s.aliases ?? []).map(normalize)];
       return hay.some((h) => h.includes(q) || q.includes(h));
     });
   }, [query]);
@@ -56,7 +46,7 @@ export default function RegionInput({ value, onChange }: Props) {
           autoComplete="off"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Ex. Repentigny, Pointe-aux-Trembles, Mascouche…"
+          placeholder="Ex. Repentigny, Pointe-aux-Trembles, L'Assomption…"
           className="flex-1 bg-transparent text-lg sm:text-xl text-[var(--color-ink)] placeholder:text-black/30 focus:outline-none"
         />
       </div>
@@ -71,19 +61,19 @@ export default function RegionInput({ value, onChange }: Props) {
           Bien reçu — {selectedName}. On génère ton plan…
         </div>
       ) : (
-        <div className="grid gap-2 max-h-64 overflow-y-auto">
+        <div className="grid gap-2 max-h-72 overflow-y-auto pr-1">
           {matches.length > 0 ? (
-            matches.map((r) => (
+            matches.map((s) => (
               <button
-                key={r.id}
+                key={s.id}
                 type="button"
                 onClick={() => {
-                  setQuery(r.name);
-                  onChange(r.id);
+                  setQuery(s.name);
+                  onChange(s.id);
                 }}
                 className="text-left rounded-xl px-4 py-3 glass-card hover:border-black/15 hover:bg-black/[0.02] transition-colors text-[var(--color-brand-100)] font-medium"
               >
-                {r.name}
+                {s.name}
               </button>
             ))
           ) : (

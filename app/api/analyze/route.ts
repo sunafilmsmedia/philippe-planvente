@@ -2,8 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { computeScoring } from "@/lib/scoring";
 import { buildFallbackReport } from "@/lib/fallbackReport";
-import { avgPriceFor, growthFor, daysFor } from "@/lib/marketData";
-import { REGIONS } from "@/lib/regions";
+import { avgPriceFor, growthFor, daysFor, sectorName } from "@/lib/marketData";
 import type { AnalyzeResponse, Answers, Report } from "@/lib/types";
 
 export const runtime = "nodejs";
@@ -96,7 +95,7 @@ export async function POST(req: Request) {
   const marketPrice = avgPriceFor(answers.region, answers.propertyType);
   const marketGrowth = growthFor(answers.region, answers.propertyType);
   const marketDays = daysFor(answers.region, answers.propertyType);
-  const regionName = REGIONS.find((r) => r.id === answers.region)?.name ?? "";
+  const regionName = sectorName(answers.region);
 
   // Estimation réaliste : réconcilie l'estimation du proprio avec la moyenne
   // réelle du secteur (ni gonflée, ni sous-évaluée). Fourchette indicative.
