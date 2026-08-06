@@ -19,11 +19,11 @@ export default function LoadingScreen() {
         </div>
 
         <p className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-brand-300)] mb-5">
-          Génération en cours
+          Analyse en cours
         </p>
 
         <h2 className="font-serif italic text-3xl sm:text-4xl lg:text-5xl ai-shimmer-fast leading-tight text-balance">
-          L&apos;IA génère ton plan de vente
+          L&apos;IA estime ton prix
         </h2>
 
         <motion.p
@@ -32,8 +32,8 @@ export default function LoadingScreen() {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="mt-8 text-sm text-[var(--color-muted)]"
         >
-          Quelques secondes — on combine ta propriété, ton timing, ton équité et ton
-          objectif pour bâtir la meilleure stratégie.
+          L&apos;IA analyse 7 ans de données de ventes de ton secteur pour estimer un
+          prix réaliste et bâtir ton plan de vente.
         </motion.p>
 
         {/* Petits points qui dansent */}
