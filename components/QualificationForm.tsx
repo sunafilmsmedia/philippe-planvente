@@ -317,8 +317,9 @@ function QuestionRenderer({
     case "region":
       return (
         <RegionInput
-          value={answers.region}
-          onChange={(id) => onUpdate({ region: id }, true, 1100)}
+          value={answers.regionText}
+          onChange={(text, id) => onUpdate({ regionText: text, region: id }, false)}
+          onPick={(id, name) => onUpdate({ region: id, regionText: name }, true, 800)}
         />
       );
     default:

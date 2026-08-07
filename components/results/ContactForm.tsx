@@ -15,7 +15,8 @@ interface Props {
 }
 
 export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
@@ -24,7 +25,8 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
 
   const handleSubmit = async () => {
     setError(null);
-    if (!name.trim()) return setError("Ton nom est requis.");
+    if (!firstName.trim()) return setError("Ton prénom est requis.");
+    if (!lastName.trim()) return setError("Ton nom est requis.");
     if (!email.trim()) return setError("Ton courriel est requis.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
       return setError("Format de courriel invalide.");
@@ -37,6 +39,7 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
     }
     if (!consent) return setError("Merci de cocher la case de consentement.");
 
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
     setSubmitting(true);
     try {
       // Un seul type de lead : selling_plan. La règle de non-envoi au CRM
@@ -45,7 +48,7 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
+          name: fullName,
           email: email.trim(),
           phone: phone.trim() || undefined,
           consent,
@@ -56,13 +59,12 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
       const data = await res.json();
 
       // Meta Pixel — Lead standard avec Advanced Matching
-      const [firstNameRaw, ...lastParts] = name.trim().split(/\s+/);
       trackLeadWithMatching(
         {
           email: email.trim(),
           phone: phone.trim() || undefined,
-          firstName: firstNameRaw,
-          lastName: lastParts.join(" ") || undefined,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
         },
         {
           content_category: "real_estate_selling_plan",
@@ -73,7 +75,7 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
 
       onSubmitted({
         stored: !!data.stored,
-        firstName: firstNameRaw,
+        firstName: firstName.trim(),
       });
     } catch {
       setError("Une erreur est survenue. Réessaie dans quelques secondes.");
@@ -106,6 +108,24 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
       </h3>
 
       <div className="mt-6 space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Field
+            label="Prénom"
+            required
+            autoComplete="given-name"
+            value={firstName}
+            onChange={setFirstName}
+            placeholder="Marie"
+          />
+          <Field
+            label="Nom"
+            required
+            autoComplete="family-name"
+            value={lastName}
+            onChange={setLastName}
+            placeholder="Tremblay"
+          />
+        </div>
         <Field
           label="Courriel"
           required
@@ -114,14 +134,6 @@ export default function ContactForm({ answers, verdict, onSubmitted }: Props) {
           value={email}
           onChange={setEmail}
           placeholder="marie@exemple.ca"
-        />
-        <Field
-          label="Ton prénom"
-          required
-          autoComplete="given-name"
-          value={name}
-          onChange={setName}
-          placeholder="Marie"
         />
         <Field
           label="Téléphone"

@@ -1,4 +1,4 @@
-export function formatCurrency(n: number | undefined): string {
+export function formatCurrency(n: number | null | undefined): string {
   if (typeof n !== "number" || isNaN(n)) return "";
   return n.toLocaleString("fr-CA", {
     style: "currency",

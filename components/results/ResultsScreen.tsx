@@ -155,7 +155,7 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
       ) : (
         <>
           {/* Estimation réaliste (estimation du proprio réconciliée au marché) */}
-          {typeof analyze.realisticLow === "number" && typeof analyze.realisticHigh === "number" && (
+          {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 ? (
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -188,6 +188,25 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
               </div>
               <p className="text-[11px] text-[var(--color-muted-2)] mt-3">
                 Fourchette indicative — à confirmer avec Philippe pour un prix précis.
+              </p>
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.15 }}
+              className="mt-6 rounded-3xl p-6 sm:p-7 text-center bg-gradient-to-br from-[var(--color-gold)]/12 to-transparent border border-[var(--color-gold)]/35"
+            >
+              <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-gold-soft)]">
+                Estimation de prix
+                {analyze.regionName ? ` — ${analyze.regionName}` : ""}
+              </p>
+              <p className="font-serif text-2xl sm:text-3xl text-[var(--color-brand-100)] mt-2 text-balance">
+                On n&apos;a pas encore les données de marché pour ce secteur.
+              </p>
+              <p className="text-sm text-[var(--color-muted)] mt-3 leading-relaxed max-w-md mx-auto">
+                Philippe va t&apos;appeler pour vérifier les données de ton secteur et te
+                donner un prix précis pour ta propriété.
               </p>
             </motion.div>
           )}

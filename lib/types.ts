@@ -55,7 +55,10 @@ export interface Answers {
   // wantsToSwitch = true débloque (l'utilisateur veut changer de courtier).
   hasContract?: boolean;
   wantsToSwitch?: boolean;
+  // region = id du secteur reconnu (avec données de marché) si le texte
+  // saisi correspond; regionText = ce que la personne a écrit (toujours).
   region?: string;
+  regionText?: string;
 }
 
 // Verdicts = type de plan recommandé par le logiciel.

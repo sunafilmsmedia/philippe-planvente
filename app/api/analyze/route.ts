@@ -95,7 +95,7 @@ export async function POST(req: Request) {
   const marketPrice = avgPriceFor(answers.region, answers.propertyType);
   const marketGrowth = growthFor(answers.region, answers.propertyType);
   const marketDays = daysFor(answers.region, answers.propertyType);
-  const regionName = sectorName(answers.region);
+  const regionName = sectorName(answers.region) || (answers.regionText ?? "").trim();
 
   // Estimation réaliste : réconcilie l'estimation du proprio avec la moyenne
   // réelle du secteur (ni gonflée, ni sous-évaluée). Fourchette indicative.

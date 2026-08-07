@@ -130,7 +130,7 @@ export function getVisibleQuestions(answers: Answers): QuestionDef[] {
 
 export function isAnswered(q: QuestionDef, a: Answers): boolean {
   switch (q.id) {
-    case "region": return !!a.region;
+    case "region": return !!(a.regionText && a.regionText.trim());
     case "propertyType": return !!a.propertyType;
     case "sellingMotivation": return !!a.sellingMotivation;
     case "timing": return !!a.timing;

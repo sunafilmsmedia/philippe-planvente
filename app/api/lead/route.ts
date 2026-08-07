@@ -59,7 +59,7 @@ export async function POST(req: Request) {
   }
 
   const { firstName, lastName } = splitName(name);
-  const regionName = sectorName(answers.region);
+  const regionName = sectorName(answers.region) || (answers.regionText ?? "").trim();
 
   // Payload aplati pour mapping GHL direct + données brutes en complément.
   const payload = {
@@ -91,6 +91,8 @@ export async function POST(req: Request) {
     salePreference: answers.salePreference ?? "",
     region: regionName,
     regionId: answers.region ?? "",
+    // Secteur sans données de marché → à rappeler pour vérifier.
+    regionHasData: !!answers.region,
     // Signal précieux : déjà sous contrat mais veut changer de courtier.
     hasContract: answers.hasContract ?? false,
     wantsToSwitch: answers.wantsToSwitch ?? false,
