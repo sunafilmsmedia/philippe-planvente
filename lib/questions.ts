@@ -34,7 +34,7 @@ export const QUESTIONS: QuestionDef[] = [
     id: "region",
     kind: "region",
     title: "Dans quel secteur se trouve ta propriété ?",
-    subtitle: "Écris ta ville ou ton quartier — choisis-le dans la liste proposée.",
+    subtitle: "Écris ta ville ou ton quartier.",
   },
   {
     id: "propertyType",

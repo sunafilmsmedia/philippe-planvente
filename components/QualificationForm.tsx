@@ -158,7 +158,8 @@ export default function QualificationForm({ onComplete, onNoSell, onExit }: Prop
         </AnimatePresence>
       </div>
 
-      {/* Footer controls */}
+      {/* Footer controls — masqué pour la question secteur (bouton dédié) */}
+      {current.id !== "region" && (
       <footer className="mt-8 sm:mt-10 pt-6 border-t border-black/5">
         <div className="flex items-center justify-between gap-4">
           <button
@@ -219,6 +220,7 @@ export default function QualificationForm({ onComplete, onNoSell, onExit }: Prop
           )}
         </div>
       </footer>
+      )}
     </div>
   );
 }
@@ -319,7 +321,7 @@ function QuestionRenderer({
         <RegionInput
           value={answers.regionText}
           onChange={(text, id) => onUpdate({ regionText: text, region: id }, false)}
-          onPick={(id, name) => onUpdate({ region: id, regionText: name }, true, 800)}
+          onSubmit={(text, id) => onUpdate({ regionText: text, region: id }, true, 0)}
         />
       );
     default:

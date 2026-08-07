@@ -1,12 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SECTORS } from "@/lib/marketData";
 
 interface Props {
   value?: string; // texte saisi (regionText)
   onChange: (text: string, matchedId?: string) => void;
-  onPick: (id: string, name: string) => void;
+  onSubmit: (text: string, matchedId?: string) => void;
 }
 
 function normalize(s: string): string {
@@ -19,7 +19,7 @@ function normalize(s: string): string {
     .trim();
 }
 
-// Trouve l'id du secteur si le texte correspond clairement à un secteur connu.
+// Identifie (en silence) l'id du secteur si le texte correspond à un secteur connu.
 function matchId(query: string): string | undefined {
   const q = normalize(query);
   if (!q) return undefined;
@@ -34,20 +34,13 @@ function matchId(query: string): string | undefined {
   return contains.length === 1 ? contains[0].id : undefined;
 }
 
-export default function RegionInput({ value, onChange, onPick }: Props) {
+export default function RegionInput({ value, onChange, onSubmit }: Props) {
   const [query, setQuery] = useState(value ?? "");
+  const canSubmit = query.trim().length > 0;
 
-  const suggestions = useMemo(() => {
-    const q = normalize(query);
-    if (!q) return SECTORS.slice(0, 8);
-    return SECTORS.filter((s) => {
-      const hay = [normalize(s.name), ...(s.aliases ?? []).map(normalize)];
-      return hay.some((h) => h.includes(q) || q.includes(h));
-    }).slice(0, 8);
-  }, [query]);
-
-  // On masque les suggestions si le texte correspond déjà exactement à un secteur.
-  const exactName = SECTORS.some((s) => normalize(s.name) === normalize(query));
+  const submit = () => {
+    if (canSubmit) onSubmit(query.trim(), matchId(query));
+  };
 
   return (
     <div className="space-y-3">
@@ -66,31 +59,40 @@ export default function RegionInput({ value, onChange, onPick }: Props) {
             setQuery(text);
             onChange(text, matchId(text));
           }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              submit();
+            }
+          }}
           placeholder="Écris ta ville ou ton quartier…"
           className="flex-1 bg-transparent text-lg sm:text-xl text-[var(--color-ink)] placeholder:text-black/30 focus:outline-none"
         />
       </div>
 
-      {!exactName && suggestions.length > 0 && (
-        <div className="grid gap-2 max-h-64 overflow-y-auto pr-1">
-          {suggestions.map((s) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => {
-                setQuery(s.name);
-                onPick(s.id, s.name);
-              }}
-              className="text-left rounded-xl px-4 py-2.5 glass-card hover:border-black/15 hover:bg-black/[0.02] transition-colors text-[var(--color-brand-100)] font-medium"
-            >
-              {s.name}
-            </button>
-          ))}
-        </div>
-      )}
+      <button
+        type="button"
+        onClick={submit}
+        disabled={!canSubmit}
+        className="
+          w-full inline-flex items-center justify-center gap-2
+          px-6 py-3.5 rounded-full text-base font-medium
+          bg-gradient-to-b from-[var(--color-brand-500)] to-[var(--color-brand-700)]
+          text-white
+          shadow-[0_15px_40px_-10px_rgba(225,29,46,0.55)]
+          hover:shadow-[0_20px_50px_-10px_rgba(225,29,46,0.7)]
+          disabled:opacity-50 disabled:cursor-not-allowed
+          transition-all
+        "
+      >
+        Suivant
+        <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+          <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
 
       <p className="text-xs text-[var(--color-muted-2)] text-center">
-        Ton secteur n&apos;est pas dans la liste ? Écris-le quand même — on validera les
+        Ton secteur n&apos;est pas couvert ? Écris-le quand même — on validera les
         données avec toi.
       </p>
     </div>
