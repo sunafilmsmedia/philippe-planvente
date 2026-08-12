@@ -55,14 +55,36 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
   const { scoring, report } = analyze;
   const badge = VERDICT_BADGE[scoring.verdict];
   const [submission, setSubmission] = useState<SubmissionState>({ kind: "pending" });
+  const [mode, setMode] = useState<"choose" | "form" | "median">("choose");
+  void revealChoice;
 
-  // Gating : la personne a demandé son plan complet mais n'a pas encore
-  // soumis ses coordonnées → on bloque tout le plan derrière le ContactForm.
-  const isGated = revealChoice === "yes" && submission.kind === "pending";
-  // Score seulement : elle a choisi « juste voir mon score ».
-  const isScoreOnly = revealChoice === "no";
+  const showFull = submission.kind === "done";
 
-  if (isGated) {
+  // ─────────── Écran de choix : estimation précise vs prix médian ───────────
+  if (!showFull && mode === "choose") {
+    return (
+      <ChooserScreen
+        onPrecise={() => setMode("form")}
+        onMedian={() => setMode("median")}
+        onRestart={onRestart}
+      />
+    );
+  }
+
+  // ─────────── Prix médian seul (option 2) ───────────
+  if (!showFull && mode === "median") {
+    return (
+      <MedianScreen
+        analyze={analyze}
+        propertyLabel={answers.propertyType ? PROPERTY_LABEL[answers.propertyType] : ""}
+        onUnlock={() => setMode("form")}
+        onRestart={onRestart}
+      />
+    );
+  }
+
+  // ─────────── Formulaire (estimation au $ près + plan) ───────────
+  if (!showFull && mode === "form") {
     return (
       <div className="min-h-screen px-5 sm:px-8 py-12 sm:py-16 max-w-xl mx-auto w-full">
         <motion.div
@@ -82,18 +104,14 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           </div>
 
           <p className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-brand-300)] mb-3">
-            Estimation + plan prêts
+            Estimation au dollar près + plan
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] leading-[1.1] tracking-tight text-balance">
-            Ton estimation de prix est prête.
+            Où veux-tu recevoir ton estimation ?
           </h1>
-          <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-md mx-auto">
-            L&apos;estimation de prix de ta propriété est prête, ainsi qu&apos;un plan de
-            vente personnalisé selon ta situation.
-          </p>
         </motion.div>
 
-        <div className="mt-10">
+        <div className="mt-8">
           <ContactForm
             answers={answers}
             verdict={scoring.verdict}
@@ -102,12 +120,12 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           />
         </div>
 
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <button
-            onClick={onRestart}
+            onClick={() => setMode("choose")}
             className="text-xs text-[var(--color-muted-2)] hover:text-[var(--color-brand-200)] transition-colors"
           >
-            Retour à l&apos;accueil
+            ← Revenir aux options
           </button>
         </div>
       </div>
@@ -139,20 +157,15 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[var(--color-brand-100)] leading-[1.1] tracking-tight text-balance">
           {report.headline}
         </h1>
-        {!isScoreOnly && (
-          <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-2xl mx-auto">
-            {report.summary}
-          </p>
-        )}
+        <p className="mt-5 text-base sm:text-lg text-[var(--color-muted)] leading-relaxed text-balance max-w-2xl mx-auto">
+          {report.summary}
+        </p>
       </motion.div>
 
       {/* Score card */}
       <ScoreCard score={scoring.score} verdict={scoring.verdict} />
 
-      {/* ─────────────── Score seulement ─────────────── */}
-      {isScoreOnly ? (
-        <ScoreOnlyCta verdict={scoring.verdict} onRestart={onRestart} generatedBy={analyze.generatedBy} />
-      ) : (
+      {
         <>
           {/* Estimation réaliste (estimation du proprio réconciliée au marché) */}
           {typeof analyze.marketPrice === "number" && analyze.marketPrice > 0 ? (
@@ -329,7 +342,7 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
           {/* CTA courtier */}
           <BrokerCta label={report.cta} />
         </>
-      )}
+      }
 
       {/* Footer */}
       <div className="mt-12 mb-24 sm:mb-12 text-center">
@@ -347,34 +360,167 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
   );
 }
 
-function ScoreOnlyCta({
-  verdict,
+// Écran de choix : estimation précise (formulaire) vs prix médian tout de suite.
+function ChooserScreen({
+  onPrecise,
+  onMedian,
   onRestart,
-  generatedBy,
 }: {
-  verdict: Verdict;
+  onPrecise: () => void;
+  onMedian: () => void;
   onRestart: () => void;
-  generatedBy: "claude" | "fallback";
 }) {
-  void generatedBy;
-  const line =
-    verdict === "offensif"
-      ? "Ton plan complet en 4 étapes est prêt. Un courtier peut te le présenter et confirmer ta stratégie de vente."
-      : verdict === "strategique"
-      ? "Ton plan complet en 4 étapes est prêt. Un courtier peut t'aider à bien préparer ta mise en marché."
-      : "Un courtier peut t'aider à préparer ta propriété et à choisir le bon moment pour vendre.";
   return (
-    <div className="mt-10">
-      <p className="text-center text-sm sm:text-base text-[var(--color-muted)] leading-relaxed max-w-md mx-auto">
-        {line}
-      </p>
-      <BrokerCta label="Parler à un courtier pour valider mon plan" />
-      <div className="mt-6 text-center">
+    <div className="min-h-screen px-5 sm:px-8 py-12 sm:py-16 max-w-xl mx-auto w-full">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="text-center"
+      >
+        <p className="text-[11px] uppercase tracking-[0.25em] text-[var(--color-brand-300)] mb-3">
+          Ton estimation est prête
+        </p>
+        <h1 className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] leading-[1.1] tracking-tight text-balance">
+          Comment veux-tu ton estimation ?
+        </h1>
+      </motion.div>
+
+      <div className="mt-10 space-y-4">
+        {/* Option 1 — estimation au $ près (formulaire) */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          onClick={onPrecise}
+          className="
+            group w-full text-left rounded-2xl p-5 sm:p-6
+            bg-gradient-to-b from-[var(--color-brand-500)] to-[var(--color-brand-700)]
+            text-white
+            shadow-[0_20px_50px_-15px_rgba(225,29,46,0.6)]
+            hover:-translate-y-0.5 transition-all duration-300
+          "
+        >
+          <span className="block font-medium text-lg">Mon estimation au dollar près</span>
+          <span className="block text-sm text-white/85 mt-1">
+            Prix précis pour TA propriété + plan de vente personnalisé
+          </span>
+        </motion.button>
+
+        {/* Option 2 — juste le prix médian */}
+        <motion.button
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
+          onClick={onMedian}
+          className="
+            group w-full text-left rounded-2xl p-5 sm:p-6
+            glass-card hover:border-black/15 hover:bg-black/[0.02] transition-all
+          "
+        >
+          <span className="block font-medium text-lg text-[var(--color-brand-100)]">
+            Juste le prix médian de mon secteur
+          </span>
+          <span className="block text-sm text-[var(--color-muted)] mt-1">
+            Le prix médian du marché, tout de suite
+          </span>
+        </motion.button>
+      </div>
+
+      <div className="mt-10 text-center">
         <button
           onClick={onRestart}
           className="text-xs text-[var(--color-muted-2)] hover:text-[var(--color-brand-200)] transition-colors"
         >
-          Refaire mon plan
+          Retour à l&apos;accueil
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Prix médian seul + option de débloquer l'estimation précise.
+function MedianScreen({
+  analyze,
+  propertyLabel,
+  onUnlock,
+  onRestart,
+}: {
+  analyze: AnalyzeResponse;
+  propertyLabel: string;
+  onUnlock: () => void;
+  onRestart: () => void;
+}) {
+  const hasMedian = typeof analyze.marketPrice === "number" && analyze.marketPrice > 0;
+  return (
+    <div className="min-h-screen px-5 sm:px-8 py-12 sm:py-16 max-w-xl mx-auto w-full">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="rounded-3xl p-6 sm:p-8 text-center bg-gradient-to-br from-[var(--color-gold)]/12 to-transparent border border-[var(--color-gold)]/35"
+      >
+        <p className="text-[11px] uppercase tracking-[0.2em] text-[var(--color-gold-soft)]">
+          Prix médian
+          {propertyLabel ? ` · ${propertyLabel}` : ""}
+          {analyze.regionName ? ` — ${analyze.regionName}` : ""}
+        </p>
+        {hasMedian ? (
+          <>
+            <p className="font-serif text-4xl sm:text-5xl text-[var(--color-brand-100)] mt-2">
+              {formatCurrency(analyze.marketPrice)}
+            </p>
+            <div className="mt-3 flex items-center justify-center gap-x-4 gap-y-1 flex-wrap text-xs text-[var(--color-muted)]">
+              {analyze.marketGrowth && (
+                <span className="text-emerald-700 font-semibold">▲ {analyze.marketGrowth} depuis 2019</span>
+              )}
+              {typeof analyze.marketDays === "number" && analyze.marketDays > 0 && (
+                <span>Se vend en ~{analyze.marketDays} jours en moyenne</span>
+              )}
+            </div>
+            <p className="text-[11px] text-[var(--color-muted-2)] mt-3">
+              Prix médian du secteur — pas encore ajusté à ta propriété.
+            </p>
+          </>
+        ) : (
+          <>
+            <p className="font-serif text-2xl sm:text-3xl text-[var(--color-brand-100)] mt-2 text-balance">
+              On n&apos;a pas encore les données de marché pour ce secteur.
+            </p>
+            <p className="text-sm text-[var(--color-muted)] mt-3">
+              Philippe va t&apos;appeler pour vérifier les données et te donner un prix précis.
+            </p>
+          </>
+        )}
+      </motion.div>
+
+      <div className="mt-8 text-center">
+        <p className="text-sm text-[var(--color-muted)] mb-4 text-balance max-w-sm mx-auto">
+          Veux-tu ton <strong className="text-[var(--color-brand-100)]">estimation au dollar près</strong> pour
+          ta propriété + ton plan de vente personnalisé ?
+        </p>
+        <button
+          onClick={onUnlock}
+          className="
+            w-full inline-flex items-center justify-center gap-2
+            px-6 py-4 rounded-full text-base font-medium
+            bg-gradient-to-b from-[var(--color-brand-500)] to-[var(--color-brand-700)]
+            text-white
+            shadow-[0_15px_40px_-10px_rgba(225,29,46,0.55)]
+            hover:shadow-[0_20px_50px_-10px_rgba(225,29,46,0.7)]
+            transition-all
+          "
+        >
+          Obtenir mon estimation précise + mon plan
+          <svg className="w-4 h-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M5 10h10M11 6l4 4-4 4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <button
+          onClick={onRestart}
+          className="mt-5 text-xs text-[var(--color-muted-2)] hover:text-[var(--color-brand-200)] transition-colors"
+        >
+          Retour à l&apos;accueil
         </button>
       </div>
     </div>

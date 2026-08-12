@@ -14,7 +14,11 @@ export type ZoneId =
   | "terrebonne"
   | "mascouche"
   | "repentigny"
-  | "rive-nord-est";
+  | "rive-nord-est"
+  | "anjou-saint-leonard"
+  | "ouest-rive-nord"
+  | "brossard-saint-lambert"
+  | "saint-francois-du-lac";
 
 export interface TypeStat {
   price: number;
@@ -59,6 +63,30 @@ export const ZONE_DATA: Record<ZoneId, ZoneMarket> = {
     condo: { price: 355_000, growth: "+113 %" },
     plex: { price: 650_000 },
   },
+  // Anjou–Saint-Léonard
+  "anjou-saint-leonard": {
+    maison: { price: 679_500, growth: "+48 %" },
+    condo: { price: 401_000, growth: "+62 %" },
+    plex: { price: 963_750, growth: "+52 %" },
+  },
+  // Ouest de la Rive-Nord : St-Joseph-du-Lac, Deux-Montagnes, Oka, Pointe-Calumet,
+  // Ste-Marthe-sur-le-Lac, St-Eustache, St-Placide
+  "ouest-rive-nord": {
+    maison: { price: 549_900, growth: "+104 %" },
+    condo: { price: 370_000, growth: "+104 %" },
+    plex: { price: 750_000, growth: "+95 %" },
+  },
+  // Brossard–Saint-Lambert (Rive-Sud)
+  "brossard-saint-lambert": {
+    maison: { price: 770_000, growth: "+58 %" },
+    condo: { price: 424_500, growth: "+73 %" },
+    plex: { price: 910_000, growth: "+76 %" }, // plex 2024 (2025 N/D)
+  },
+  // Saint-François-du-Lac (Centre-du-Québec — hors Baromètre, données approx.)
+  "saint-francois-du-lac": {
+    maison: { price: 335_474 },
+    plex: { price: 268_000 },
+  },
 };
 
 export interface Sector {
@@ -74,8 +102,8 @@ export const SECTORS: Sector[] = [
   { id: "pointe-aux-trembles", name: "Pointe-aux-Trembles", zone: "ile-est", aliases: ["pat"] },
   { id: "riviere-des-prairies", name: "Rivière-des-Prairies", zone: "ile-est", aliases: ["rdp"] },
   { id: "montreal-est", name: "Montréal-Est", zone: "ile-est" },
-  { id: "anjou", name: "Anjou", zone: "ile-est" },
-  { id: "saint-leonard", name: "Saint-Léonard", zone: "ile-est", aliases: ["st leonard"] },
+  { id: "anjou", name: "Anjou", zone: "anjou-saint-leonard" },
+  { id: "saint-leonard", name: "Saint-Léonard", zone: "anjou-saint-leonard", aliases: ["st leonard"] },
   { id: "montreal-nord", name: "Montréal-Nord", zone: "ile-est" },
   { id: "mercier", name: "Mercier", zone: "ile-est", aliases: ["tetreaultville"] },
   { id: "hochelaga", name: "Hochelaga-Maisonneuve", zone: "ile-est", aliases: ["hochelaga", "maisonneuve", "homa"] },
@@ -103,6 +131,19 @@ export const SECTORS: Sector[] = [
   { id: "sainte-anne-des-plaines", name: "Sainte-Anne-des-Plaines", zone: "terrebonne", aliases: ["sadp"] },
   // ── Mascouche ──────────────────────────────────────────
   { id: "mascouche", name: "Mascouche", zone: "mascouche" },
+  // ── Ouest de la Rive-Nord ──────────────────────────────
+  { id: "saint-joseph-du-lac", name: "Saint-Joseph-du-Lac", zone: "ouest-rive-nord", aliases: ["st joseph du lac"] },
+  { id: "deux-montagnes", name: "Deux-Montagnes", zone: "ouest-rive-nord" },
+  { id: "oka", name: "Oka", zone: "ouest-rive-nord" },
+  { id: "pointe-calumet", name: "Pointe-Calumet", zone: "ouest-rive-nord" },
+  { id: "sainte-marthe-sur-le-lac", name: "Sainte-Marthe-sur-le-Lac", zone: "ouest-rive-nord", aliases: ["sainte marthe", "ste marthe"] },
+  { id: "saint-eustache", name: "Saint-Eustache", zone: "ouest-rive-nord", aliases: ["st eustache"] },
+  { id: "saint-placide", name: "Saint-Placide", zone: "ouest-rive-nord" },
+  // ── Rive-Sud : Brossard–Saint-Lambert ──────────────────
+  { id: "brossard", name: "Brossard", zone: "brossard-saint-lambert" },
+  { id: "saint-lambert", name: "Saint-Lambert", zone: "brossard-saint-lambert", aliases: ["st lambert"] },
+  // ── Centre-du-Québec ───────────────────────────────────
+  { id: "saint-francois-du-lac", name: "Saint-François-du-Lac", zone: "saint-francois-du-lac", aliases: ["st francois du lac"] },
 ];
 
 function zoneOf(sectorId?: string): ZoneId | null {
