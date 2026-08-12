@@ -91,7 +91,8 @@ export async function POST(req: Request) {
     salePreference: answers.salePreference ?? "",
     region: regionName,
     regionId: answers.region ?? "",
-    // Secteur sans données de marché → à rappeler pour vérifier.
+    regionText: (answers.regionText ?? "").trim(), // ce que la personne a écrit
+    // Secteur sans données de marché → à rappeler pour vérifier / à ajouter.
     regionHasData: !!answers.region,
     // Signal précieux : déjà sous contrat mais veut changer de courtier.
     hasContract: answers.hasContract ?? false,
