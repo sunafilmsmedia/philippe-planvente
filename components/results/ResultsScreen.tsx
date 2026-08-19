@@ -218,8 +218,8 @@ export default function ResultsScreen({ analyze, answers, revealChoice, onRestar
                 On n&apos;a pas encore les données de marché pour ce secteur.
               </p>
               <p className="text-sm text-[var(--color-muted)] mt-3 leading-relaxed max-w-md mx-auto">
-                Philippe va t&apos;appeler pour vérifier les données de ton secteur et te
-                donner un prix précis pour ta propriété.
+                Philippe te contactera personnellement pour vérifier les données de ton
+                secteur et te donner un prix précis pour ta propriété.
               </p>
             </motion.div>
           )}
@@ -403,7 +403,7 @@ function ChooserScreen({
         >
           <span className="block font-medium text-lg">Mon estimation au dollar près</span>
           <span className="block text-sm text-white/85 mt-1">
-            Prix précis pour TA propriété + plan de vente personnalisé
+            Philippe évalue ta propriété et te revient avec ton prix + ton plan
           </span>
         </motion.button>
 
@@ -488,7 +488,7 @@ function MedianScreen({
               On n&apos;a pas encore les données de marché pour ce secteur.
             </p>
             <p className="text-sm text-[var(--color-muted)] mt-3">
-              Philippe va t&apos;appeler pour vérifier les données et te donner un prix précis.
+              Philippe te contactera personnellement pour vérifier les données et te donner un prix précis.
             </p>
           </>
         )}
